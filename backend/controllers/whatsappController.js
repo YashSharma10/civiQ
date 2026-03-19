@@ -85,41 +85,6 @@ exports.handleWebhook = async (req, res) => {
   }
   res.sendStatus(200);
 };
-  try {
-    const entry = req.body?.entry?.[0];
-    const changes = entry?.changes?.[0];
-    const value = changes?.value;
-    const messages = value?.messages;
-    if (!messages) {
-      console.log('[Webhook][POST] No messages found in payload.');
-      return res.sendStatus(200);
-    }
-    const msg = messages[0];
-    const phone = msg?.from;
-    if (!phone) {
-      console.log('[Webhook][POST] No phone number found in message.');
-      return res.sendStatus(200);
-    }
-    const session = getSession(phone);
-
-    // Logging
-    log(`[${phone}] Step: ${session.step}`);
-
-    // Handle message types
-    if (msg.type === 'text') {
-      await handleTextMessage(msg, session);
-    } else if (msg.type === 'image') {
-      await handleImageMessage(msg, session);
-    } else if (msg.type === 'location') {
-      await handleLocationMessage(msg, session);
-    } else {
-      await sendWhatsAppMessage(phone, 'Sorry, only text, image, and location are supported.');
-    }
-  } catch (err) {
-    console.error('[Webhook][POST] Error:', err);
-  }
-  res.sendStatus(200);
-};
 
 async function handleTextMessage(msg, session) {
   const phone = session.phone;
