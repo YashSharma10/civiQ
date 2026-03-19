@@ -311,7 +311,7 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            <Link to="/dashboard" className="live-map-btn whitespace-nowrap !px-4 !py-3 !text-[13px] sm:!px-8 sm:!py-5 sm:!text-[18px]">
+            <Link to="/dashboard" className="live-map-btn whitespace-nowrap !px-4 !py-3 !text-[13px] sm:!px-8 sm:!py-5 sm:!text-[18px] mt-3.5">
               Explore Live Map
             </Link>
           </motion.div>
