@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useUser } from '@clerk/clerk-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Upload, CheckCircle, FileText, ImagePlus, AlertCircle, ThumbsUp, Layers, MousePointerClick, MapPin, LocateFixed } from 'lucide-react';
+import { ArrowLeft, Upload, CheckCircle, FileText, ImagePlus, AlertCircle, ThumbsUp, Layers, MousePointerClick, MapPin, LocateFixed, ShieldCheck, ShieldAlert, Loader2, XCircle } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -40,6 +40,10 @@ export default function ReportIssue() {
   const [preview, setPreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  // Gemini image validation state
+  const [validating, setValidating] = useState(false);
+  const [validationResult, setValidationResult] = useState(null); // { isValid, confidence, reason }
 
   const { user } = useUser();
   const navigate = useNavigate();
@@ -124,20 +128,49 @@ export default function ReportIssue() {
     }
   }
 
+
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
       setPreview(URL.createObjectURL(file));
+      setValidationResult(null); // Reset on new image
     }
   };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
+    setValidationResult(null);
 
     try {
+      // 1. Validate Image using Gemini AI
+      if (image) {
+        setValidating(true);
+        const data = new FormData();
+        data.append('image', image);
+        data.append('category', category);
+        data.append('subCategory', subCategory);
+        data.append('title', formData.title);
+        data.append('description', formData.description);
+        
+        const res = await api.post('/validate-image', data, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        
+        setValidating(false);
+        setValidationResult(res.data);
+
+        // Block submission if AI determines ANY field is invalid
+        if (!res.data.isValid) {
+          setSubmitting(false);
+          return;
+        }
+      }
       let imageUrl = '';
       if (image) {
         const formDataUpload = new FormData();
@@ -380,6 +413,65 @@ export default function ReportIssue() {
                        </div>
                     )}
                   </label>
+
+                  {/* AI Validation Banner (Now acts as a multi-field feedback popup) */}
+                  {validating && (
+                     <div className="mt-4 flex items-center justify-center gap-3 text-sm font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-2xl px-5 py-4 shadow-sm animate-pulse">
+                        <Loader2 className="w-5 h-5 animate-spin shrink-0" />
+                        <span>AI is verifying your report details...</span>
+                     </div>
+                  )}
+                  {!validating && validationResult && (
+                     <div className={`mt-4 rounded-2xl overflow-hidden border shadow-sm transition-all ${
+                        validationResult.isValid 
+                           ? 'border-green-200 bg-green-50' 
+                           : 'border-red-200 bg-red-50'
+                     }`}>
+                        <div className={`px-4 py-3 border-b flex items-center gap-2 ${
+                           validationResult.isValid ? 'border-green-200 bg-green-100/50 text-green-800' : 'border-red-200 bg-red-100/50 text-red-800'
+                        }`}>
+                           {validationResult.isValid 
+                              ? <ShieldCheck className="w-5 h-5" /> 
+                              : <ShieldAlert className="w-5 h-5" />
+                           }
+                           <span className="font-bold text-sm">
+                              {validationResult.isValid ? 'Report Verified' : 'Report Verification Failed'}
+                           </span>
+                        </div>
+                        <div className="p-4 flex flex-col gap-3">
+                           {/* Image Check */}
+                           <div className="flex items-start gap-2.5">
+                              {validationResult.isImageValid ? <CheckCircle className="w-4 h-4 text-green-600 shrink-0 mt-0.5" /> : <XCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />}
+                              <div className="text-sm">
+                                 <p className={`font-bold ${validationResult.isImageValid ? 'text-gray-900' : 'text-red-700'}`}>Image Relevance</p>
+                                 {!validationResult.isImageValid && <p className="text-red-600 text-xs mt-0.5">Image does not appear to match the selected category.</p>}
+                              </div>
+                           </div>
+                           {/* Title Check */}
+                           <div className="flex items-start gap-2.5">
+                              {validationResult.isTitleValid ? <CheckCircle className="w-4 h-4 text-green-600 shrink-0 mt-0.5" /> : <XCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />}
+                              <div className="text-sm">
+                                 <p className={`font-bold ${validationResult.isTitleValid ? 'text-gray-900' : 'text-red-700'}`}>Title Relevance</p>
+                                 {!validationResult.isTitleValid && <p className="text-red-600 text-xs mt-0.5">Title is vague, spammy, or unrelated to the issue.</p>}
+                              </div>
+                           </div>
+                           {/* Description Check */}
+                           <div className="flex items-start gap-2.5">
+                              {validationResult.isDescriptionValid ? <CheckCircle className="w-4 h-4 text-green-600 shrink-0 mt-0.5" /> : <XCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />}
+                              <div className="text-sm">
+                                 <p className={`font-bold ${validationResult.isDescriptionValid ? 'text-gray-900' : 'text-red-700'}`}>Description Relevance</p>
+                                 {!validationResult.isDescriptionValid && <p className="text-red-600 text-xs mt-0.5">Description is too generic or unrelated.</p>}
+                              </div>
+                           </div>
+
+                           {!validationResult.isValid && (
+                              <div className="mt-2 pt-3 border-t border-red-200/60">
+                                 <p className="text-xs font-medium text-red-800"><span className="font-bold">AI Note:</span> {validationResult.reason}</p>
+                              </div>
+                           )}
+                        </div>
+                     </div>
+                  )}
                 </div>
               </div>
 
