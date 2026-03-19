@@ -6,6 +6,7 @@ const { clerkMiddleware } = require('@clerk/express');
 const connectDB = require('./config/db');
 const issueRoutes = require('./routes/issueRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const postRoutes = require('./routes/postRoutes');
 
 // Connect to database
 connectDB();
@@ -25,6 +26,7 @@ app.use('/uploads', express.static('uploads'));
 // Routes
 app.use('/api/issues', issueRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/posts', postRoutes);
 
 app.get('/', (req, res) => {
     res.send('Civic Issue Tracker API is running...');

@@ -310,7 +310,7 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            <Link to="/dashboard" className="live-map-btn mt-4 sm:mt-2">
+            <Link to="/dashboard" className="live-map-btn mt-4 sm:mt-3">
               Explore Live Map
             </Link>
           </motion.div>
