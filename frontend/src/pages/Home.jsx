@@ -420,12 +420,12 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-10 sm:py-16 text-center border-t-8 border-[#252525]">
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <Shield className="w-8 h-8 text-[#006aff]" />
-          <span className="text-3xl font-bold tracking-tight">Civi<span className="text-[#006aff]">Q</span></span>
+      <footer className="bg-gray-900 text-white py-8 sm:py-10 text-center border-t-4 sm:border-t-8 border-[#252525]">
+        <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+          <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-[#006aff]" />
+          <span className="text-2xl sm:text-3xl font-bold tracking-tight">Civi<span className="text-[#006aff]">Q</span></span>
         </div>
-        <p className="text-gray-400 font-medium tracking-wide">© 2026 CiviQ Platform. Built for the community.</p>
+        <p className="text-gray-400 text-sm sm:text-base font-medium tracking-wide">© 2026 CiviQ Platform. Built for the community.</p>
       </footer>
     </div>
   );

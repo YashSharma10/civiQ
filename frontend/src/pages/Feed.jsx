@@ -211,12 +211,12 @@ const PostCard = ({ post, onRefresh }) => {
           <div className="absolute inset-0 bg-gradient-to-br from-[#006aff]/80 via-purple-900/80 to-black"></div>
         )}
 
-        {/* Overlay Gradients for readability */}
-        <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none z-0"></div>
-        <div className="absolute inset-x-0 top-0 h-[20%] bg-gradient-to-b from-black/60 to-transparent pointer-events-none z-0"></div>
+        {/* Overlay Gradients — strong enough to always read text */}
+        <div className="absolute inset-x-0 bottom-0 h-[75%] bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-0"></div>
+        <div className="absolute inset-x-0 top-0 h-[25%] bg-gradient-to-b from-black/70 to-transparent pointer-events-none z-0"></div>
 
         {/* Content Layer (Bottom Left) */}
-        <div className="absolute bottom-0 left-0 right-16 p-4 flex flex-col justify-end pointer-events-none z-10">
+        <div className="absolute bottom-0 left-0 right-14 pb-10 pt-4 px-4 flex flex-col justify-end pointer-events-none z-10">
           {/* Repost indicator */}
           {post.type === 'repost' && (
             <div className="flex items-center gap-1.5 text-[12px] text-white/80 font-bold mb-2">
@@ -226,10 +226,10 @@ const PostCard = ({ post, onRefresh }) => {
 
           <div className="flex items-center gap-2 mb-2 pointer-events-auto">
             <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${post.authorId}&backgroundColor=006aff`}
-              className="w-10 h-10 rounded-full border border-white/20" alt="avatar" />
+              className="w-9 h-9 rounded-full border border-white/20" alt="avatar" />
             <div className="flex flex-col">
-              <span className="font-bold text-[15px] drop-shadow-md">{post.authorName}</span>
-              <span className="text-[12px] text-white/70 drop-shadow-md">
+              <span className="font-bold text-[14px] drop-shadow-md">{post.authorName}</span>
+              <span className="text-[11px] text-white/70 drop-shadow-md">
                 {new Date(post.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
@@ -243,37 +243,33 @@ const PostCard = ({ post, onRefresh }) => {
           )}
 
           {post.content && (
-            <p className="text-[15px] font-medium leading-snug drop-shadow-md pointer-events-auto mb-2 pr-2">
+            <p className="text-[15px] font-semibold leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pointer-events-auto mb-2 pr-2">
               {post.content}
             </p>
           )}
         </div>
 
         {/* Actions Sidebar (Right) */}
-        <div className="absolute bottom-6 right-2 flex flex-col items-center gap-4 z-10 w-14 pointer-events-auto">
+        <div className="absolute bottom-4 right-3 flex flex-col items-center gap-5 z-10 w-12 pointer-events-auto">
           <button onClick={handleUpvote} className="flex flex-col items-center gap-1 group/btn">
-            <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+            <div className="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover/btn:bg-white/20 transition-all shadow-lg">
               <ThumbsUp className={`w-5 h-5 ${hasUpvoted ? 'fill-[#006aff] text-[#006aff]' : 'text-white'}`} />
             </div>
-            <span className="text-[12px] font-bold text-white drop-shadow-md">{upvotes}</span>
+            <span className="text-[11px] font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{upvotes}</span>
           </button>
 
           <button onClick={() => setShowComments(v => !v)} className="flex flex-col items-center gap-1 group/btn">
-            <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+            <div className="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover/btn:bg-white/20 transition-all shadow-lg">
               <MessageCircle className="w-5 h-5 text-white" />
             </div>
-            <span className="text-[12px] font-bold text-white drop-shadow-md">{post.comments?.length || 0}</span>
+            <span className="text-[11px] font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{post.comments?.length || 0}</span>
           </button>
 
           <button onClick={() => { if (!user) return alert('Please log in!'); setRepostModal(true); }} className="flex flex-col items-center gap-1 group/btn">
-            <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+            <div className="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover/btn:bg-white/20 transition-all shadow-lg">
                <Repeat2 className={`w-5 h-5 ${hasReposted ? 'text-[#10b981]' : 'text-white'}`} />
             </div>
-            <span className="text-[12px] font-bold text-white drop-shadow-md">{post.reposts?.length || 0}</span>
-          </button>
-
-          <button className="flex flex-col items-center gap-1 group/btn mt-2">
-            <MoreHorizontal className="w-6 h-6 text-white drop-shadow-md" />
+            <span className="text-[11px] font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{post.reposts?.length || 0}</span>
           </button>
         </div>
 
@@ -333,62 +329,52 @@ const IssueCard = ({ issue }) => {
         <div className="absolute inset-0 bg-gradient-to-br from-red-900 via-orange-900/80 to-black"></div>
       )}
 
-      {/* Overlay Gradients for readability */}
-      <div className="absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-black/95 via-black/50 to-transparent pointer-events-none z-0"></div>
-      <div className="absolute inset-x-0 top-0 h-[20%] bg-gradient-to-b from-black/70 to-transparent pointer-events-none z-0"></div>
-
-      {/* Top Badge */}
-      <div className="absolute top-4 left-4 flex gap-2 z-10 pointer-events-auto">
-        <span className="text-[11px] font-extrabold text-white bg-red-600/90 backdrop-blur-md px-3 py-1 rounded-full shadow-lg border border-red-500/30 tracking-wide uppercase">
-          🚨 Issue
-        </span>
-        <span className="text-[11px] font-extrabold text-white bg-black/40 backdrop-blur-md px-3 py-1 rounded-full shadow-lg border border-white/10 tracking-wide uppercase">
-          {issue.status}
-        </span>
-      </div>
+      {/* Overlay Gradients — strong enough to always read text */}
+      <div className="absolute inset-x-0 bottom-0 h-[75%] bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-0"></div>
+      <div className="absolute inset-x-0 top-0 h-[25%] bg-gradient-to-b from-black/70 to-transparent pointer-events-none z-0"></div>
 
       {/* Content Layer (Bottom Left) */}
-      <div className="absolute bottom-0 left-0 right-16 p-4 flex flex-col justify-end pointer-events-none z-10">
-        <div className="flex items-center gap-2 mb-3 pointer-events-auto">
+      <div className="absolute bottom-0 left-0 right-14 pb-10 pt-4 px-4 flex flex-col justify-end pointer-events-none z-10">
+        <div className="flex items-center gap-2 mb-2 pointer-events-auto">
           <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${issue.authorId}&backgroundColor=006aff`}
-            className="w-10 h-10 rounded-full border border-white/20 shadow-md" alt="avatar" />
+            className="w-9 h-9 rounded-full border border-white/20 shadow-md" alt="avatar" />
           <div className="flex flex-col">
-            <span className="font-bold text-[15px] drop-shadow-md">{issue.department || issue.authorName || 'Concerned Citizen'}</span>
-            <span className="text-[12px] text-white/70 drop-shadow-md">
+            <span className="font-bold text-[14px] drop-shadow-md">{issue.department || issue.authorName || 'Concerned Citizen'}</span>
+            <span className="text-[11px] text-white/70 drop-shadow-md">
               {new Date(issue.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
             </span>
           </div>
         </div>
 
-        <p className="text-[18px] font-bold leading-snug drop-shadow-md pointer-events-auto mb-1 pr-2">
+        <p className="text-[17px] font-bold leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pointer-events-auto mb-1 pr-2">
           {issue.title}
         </p>
-        <p className="text-[14px] text-white/80 font-medium leading-snug drop-shadow-md pointer-events-auto mb-2 line-clamp-3 pr-2">
+        <p className="text-[13px] text-white/85 font-medium leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pointer-events-auto mb-2 line-clamp-2 pr-2">
           {issue.description}
         </p>
       </div>
 
       {/* Actions Sidebar (Right) */}
-      <div className="absolute bottom-6 right-2 flex flex-col items-center gap-4 z-10 w-14 pointer-events-auto">
+      <div className="absolute bottom-4 right-3 flex flex-col items-center gap-5 z-10 w-12 pointer-events-auto">
         <button onClick={handleUpvote} className="flex flex-col items-center gap-1 group/btn">
-          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${hasUpvoted ? 'bg-[#10b981] shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-black/40 backdrop-blur-md border border-white/10 group-hover/btn:bg-white/20'}`}>
-            <Plus className={`w-6 h-6 stroke-[3] ${hasUpvoted ? 'text-white' : 'text-white'}`} />
+          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-lg ${hasUpvoted ? 'bg-[#10b981] shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-black/50 backdrop-blur-md border border-white/20 group-hover/btn:bg-white/20'}`}>
+            <Plus className={`w-6 h-6 stroke-[3] text-white`} />
           </div>
-          <span className="text-[12px] font-bold text-white drop-shadow-md">{upvotes}</span>
+          <span className="text-[11px] font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{upvotes}</span>
         </button>
 
         <Link to={`/issue/${issue._id}`} className="flex flex-col items-center gap-1 group/btn">
-          <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+          <div className="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover/btn:bg-white/20 transition-all shadow-lg">
             <MessageCircle className="w-5 h-5 text-white" />
           </div>
-          <span className="text-[11px] font-bold text-white drop-shadow-md">View</span>
+          <span className="text-[11px] font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">View</span>
         </Link>
         
         <button className="flex flex-col items-center gap-1 group/btn">
-          <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+          <div className="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover/btn:bg-white/20 transition-all shadow-lg">
             <Send className="w-5 h-5 text-white -rotate-45 ml-1" />
           </div>
-          <span className="text-[11px] font-bold text-white drop-shadow-md">Share</span>
+          <span className="text-[11px] font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Share</span>
         </button>
       </div>
     </div>
@@ -500,15 +486,15 @@ export default function Feed() {
       </AnimatePresence>
 
       {/* ── MOBILE (< md) ── */}
-      <div className="md:hidden flex flex-col" style={{ height: 'calc(100dvh - 56px)' }}>
-        <div className="sticky top-14 z-40 bg-white border-b border-gray-200 px-4 pt-3 pb-0 shadow-sm flex-shrink-0">
-          <div className="flex justify-between items-center mb-2">
-            <h1 className="text-[22px] font-extrabold text-gray-900">Feed</h1>
-            <button onClick={() => setShowCreateModal(true)} className="w-8 h-8 rounded-full border-[1.5px] border-[#006aff] flex items-center justify-center text-[#006aff] hover:bg-blue-50 transition-colors">
+      <div className="md:hidden flex flex-col" style={{ height: 'calc(100dvh - 64px - 64px)' }}>
+        {/* Compact tab bar header — no title text */}
+        <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 px-4 pt-2 pb-0 shadow-sm flex-shrink-0">
+          <div className="flex justify-between items-center">
+            <TabBar layoutId="feed-tab-m" />
+            <button onClick={() => setShowCreateModal(true)} className="mb-2 w-8 h-8 rounded-full border-[1.5px] border-[#006aff] flex items-center justify-center text-[#006aff] hover:bg-blue-50 transition-colors flex-shrink-0">
               <Plus className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>
-          <TabBar layoutId="feed-tab-m" />
         </div>
         <div className="flex-1 overflow-hidden flex flex-col">
           <FeedList layoutId="feed-tab-m" />
