@@ -74,19 +74,19 @@ const SwipeableCard = ({ issue, isTop, onSwipeRight, onSwipeLeft, index, total }
 
 const features = [
   {
-    icon: <AlertTriangle className="w-8 h-8 text-amber-500" />,
+    icon: <AlertTriangle className="w-4 h-4 md:w-8 md:h-8 text-amber-500" />,
     title: 'Report Instantly',
     description: 'See a pothole or broken streetlight? Snap a photo and notify authorities in seconds with our intuitive mobile-friendly tool.',
     color: 'bg-amber-50'
   },
   {
-    icon: <MapPin className="w-8 h-8 text-primary" />,
+    icon: <MapPin className="w-4 h-4 md:w-8 md:h-8 text-primary" />,
     title: 'Precision Mapping',
     description: 'Pinpoint exactly where the problem is using our integrated interactive mapping system to ensure fast response times.',
     color: 'bg-primary-50'
   },
   {
-    icon: <CheckCircle className="w-8 h-8 text-secondary" />,
+    icon: <CheckCircle className="w-4 h-4 md:w-8 md:h-8 text-secondary" />,
     title: 'Track Progress',
     description: 'Get real-time updates as your reported issues are reviewed, assigned, and successfully resolved by local authorities.',
     color: 'bg-yellow-50'
@@ -103,9 +103,9 @@ const categories = [
 ];
 
 const stats = [
-  { label: 'Issues Resolved', value: '15k+', icon: <CheckCircle className="w-5 h-5" /> },
-  { label: 'Active Citizens', value: '50k+', icon: <Users className="w-5 h-5" /> },
-  { label: 'Avg. Resolution Time', value: '48h', icon: <Activity className="w-5 h-5" /> }
+  { label: 'Issues Resolved', value: '15k+', icon: <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> },
+  { label: 'Active Citizens', value: '50k+', icon: <Users className="w-3 h-3 md:w-5 md:h-5" /> },
+  { label: 'Avg. Resolution Time', value: '48h', icon: <Activity className="w-3 h-3 md:w-5 md:h-5" /> }
 ];
 
 const fadeInUp = {
@@ -302,7 +302,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="mt-8 flex flex-col sm:flex-row justify-center gap-3 sm:gap-6 w-full sm:w-auto"
           >
-            <Link to="/report" className="report-issue-btn">
+            <Link to="/report" className="report-issue-btn !px-4 !py-3 !text-[13px] sm:!px-8 sm:!py-5 sm:!text-[18px]">
               <span className="text whitespace-nowrap">Report an Issue</span>
               <span className="svg">
                 <svg xmlns="http://www.w3.org/2000/svg" width={50} height={20} viewBox="0 0 38 15" fill="none">
@@ -310,7 +310,7 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            <Link to="/dashboard" className="live-map-btn mt-4 sm:mt-3">
+            <Link to="/dashboard" className="live-map-btn whitespace-nowrap !px-4 !py-3 !text-[13px] sm:!px-8 sm:!py-5 sm:!text-[18px]">
               Explore Live Map
             </Link>
           </motion.div>
@@ -318,7 +318,7 @@ export default function Home() {
 
         {/* Wave Divider Bottom */}
         <div className="absolute bottom-0 w-full overflow-hidden leading-none">
-          <svg className="relative block w-full h-[100px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <svg className="relative block w-full h-[40px] md:h-[100px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
             <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118,130.83,122.5,193.3,110.51,238.13,101.44,281.33,75.02,321.39,56.44Z" className="fill-gray-50"></path>
           </svg>
         </div>
@@ -333,12 +333,12 @@ export default function Home() {
             <p className="text-base sm:text-xl text-gray-600 font-medium leading-relaxed">Making a difference in your neighborhood has never been easier. Three simple steps to a better community.</p>
           </div>
 
-          <motion.div
+            <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid lg:grid-cols-3 gap-10"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-3 gap-2 md:gap-8 lg:gap-10"
           >
             {features.map((feature, index) => (
               <motion.div
@@ -358,9 +358,9 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-gray-50 relative z-10 -mt-8">
+      <section className="pt-2 pb-12 md:pt-8 md:pb-16 bg-gray-50 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
             {stats.map((stat, i) => (
               <motion.div
                 key={i}
@@ -368,9 +368,9 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-6 flex flex-col items-center justify-center border-2 border-gray-900 shadow-[6px_6px_0px_#111827] hover:-translate-y-1 hover:translate-x-1 hover:shadow-[8px_8px_0px_#111827] transition-transform"
+                className="bg-white rounded-xl md:rounded-2xl p-2 sm:p-4 md:p-6 flex flex-col items-center justify-center text-center border md:border-2 border-gray-900 shadow-[2px_2px_0px_#111827] md:shadow-[6px_6px_0px_#111827] hover:-translate-y-1 hover:translate-x-1 hover:shadow-[4px_4px_0px_#111827] md:hover:shadow-[8px_8px_0px_#111827] transition-transform"
               >
-                <div className="w-12 h-12 bg-white rounded-full border-2 border-gray-900 shadow-[2px_2px_0px_#111827] flex items-center justify-center text-gray-900 mb-3">
+                <div className="w-6 h-6 md:w-12 md:h-12 bg-white rounded-full border md:border-2 border-gray-900 shadow-[1px_1px_0px_#111827] md:shadow-[2px_2px_0px_#111827] flex items-center justify-center text-gray-900 mb-1 md:mb-3">
                   {stat.icon}
                 </div>
                 <div className="font-['Playfair_Display'] text-4xl sm:text-5xl font-extrabold text-[#006aff] mb-2">{stat.value}</div>
