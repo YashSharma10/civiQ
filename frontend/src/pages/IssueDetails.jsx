@@ -3,11 +3,12 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
 import api from '../api/axios';
-import { MapPin, Clock, MessageSquare, ThumbsUp, User, ArrowLeft, Send, Check, Activity, Pencil } from 'lucide-react';
+import { ThumbsUp, User, Activity,MessageSquare,Send, MapPin, Clock, Info, Check, Image as ImageIcon, Map, HandHeart, ArrowLeft } from 'lucide-react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import toast from 'react-hot-toast';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -35,6 +36,42 @@ export default function IssueDetails() {
 
   const [assignedWorkerName, setAssignedWorkerName] = useState('');
   const [isEditingWorker, setIsEditingWorker] = useState(true);
+  const [isDonating, setIsDonating] = useState(false);
+  const [selectedDonation, setSelectedDonation] = useState(50);
+  const [customDonation, setCustomDonation] = useState('');
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    if (query.get('donate') === 'success') {
+      toast.success('Thank you for your generous contribution! 💖', { duration: 5000 });
+      window.history.replaceState(null, '', window.location.pathname);
+    } else if (query.get('donate') === 'cancel') {
+      toast.error('Donation was cancelled.', { duration: 4000 });
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
+
+  const handleDonate = async () => {
+    const amountInRs = customDonation ? parseInt(customDonation) : selectedDonation;
+    if (!amountInRs || amountInRs < 50) return alert('Stripe requires a minimum total amount of ₹50 (approx $0.50 USD).');
+    if (!user) return alert('Please login to donate');
+    
+    setIsDonating(true);
+    try {
+      const { data } = await api.post('/payments/create-checkout-session', {
+        issueId: issue._id,
+        issueTitle: issue.title,
+        donationAmount: amountInRs * 100 // send strictly in paise
+      });
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error('Donation error:', err);
+      alert(err.response?.data?.message || 'Error processing donation');
+      setIsDonating(false);
+    }
+  };
 
   const fetchIssue = async () => {
     try {
@@ -255,17 +292,81 @@ export default function IssueDetails() {
               </div>
               {/* End Tracker */}
               
-              <div className="pt-8 mt-12 border-t border-gray-100 flex items-center justify-between">
-                <button 
-                  onClick={handleUpvote}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-sm ${isUpvoted ? 'bg-indigo-50 text-indigo-700 border-indigo-200 border' : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'}`}
-                >
-                  <ThumbsUp className={`w-5 h-5 ${isUpvoted ? 'fill-current' : ''}`} />
-                  {isUpvoted ? 'Supported' : 'Support Issue'}
-                  <span className="ml-2 bg-white px-2.5 py-0.5 rounded-md text-sm border shadow-sm">
-                    {issue.upvotes.length}
-                  </span>
-                </button>
+              <div className="pt-8 mt-12 border-t border-gray-100 flex flex-col gap-8">
+                {issue.status === 'Resolved' && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white rounded-2xl shadow-sm border border-indigo-100 p-6 flex flex-col items-center gap-5"
+                  >
+                    <div className="w-full text-center">
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-50 mb-3">
+                        <span className="text-2xl">🎉</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        Issue Successfully Resolved
+                      </h3>
+                      <p className="text-gray-600 text-sm md:text-base max-w-lg mx-auto">
+                        This civic issue has been addressed. Consider supporting our mission to continue building better communities.
+                      </p>
+                    </div>
+
+                    <div className="w-full max-w-lg">
+                      <p className="text-sm font-bold text-gray-700 mb-3 text-center uppercase tracking-wider">Select Donation Amount</p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                        {[50, 100, 500].map(amt => (
+                          <button
+                            key={amt}
+                            onClick={() => { setSelectedDonation(amt); setCustomDonation(''); }}
+                            className={`py-2.5 rounded-xl font-bold transition-all border text-sm ${selectedDonation === amt && customDonation === '' ? 'bg-indigo-50 text-primary border-primary shadow-[0_0_0_2px_rgba(79,70,229,0.2)]' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300'}`}
+                          >
+                            ₹{amt}
+                          </button>
+                        ))}
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-sm">₹</span>
+                          <input
+                            type="number"
+                            min="50"
+                            placeholder="Custom"
+                            value={customDonation}
+                            onChange={(e) => {
+                              setCustomDonation(e.target.value);
+                              setSelectedDonation(0);
+                            }}
+                            className={`w-full h-full py-2.5 pl-7 pr-3 text-sm rounded-xl font-bold border outline-none transition-all ${customDonation || selectedDonation === 0 ? 'bg-indigo-50 border-primary text-primary focus:ring-2 focus:ring-primary shadow-inner' : 'bg-white border-gray-200 text-gray-700 focus:border-gray-300'}`}
+                          />
+                        </div>
+                      </div>
+                      
+                      <button
+                        onClick={handleDonate}
+                        disabled={isDonating || (!customDonation && !selectedDonation)}
+                        className="w-full bg-primary text-white px-8 py-3.5 rounded-xl font-bold hover:bg-indigo-600 transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
+                      >
+                        {isDonating ? (
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        )}
+                        {isDonating ? 'Processing...' : `Support with ₹${customDonation || selectedDonation || 0}`}
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <button 
+                    onClick={handleUpvote}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-sm ${isUpvoted ? 'bg-indigo-50 text-indigo-700 border-indigo-200 border' : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'}`}
+                  >
+                    <ThumbsUp className={`w-5 h-5 ${isUpvoted ? 'fill-current' : ''}`} />
+                    {isUpvoted ? 'Supported' : 'Support Issue'}
+                    <span className="ml-2 bg-white px-2.5 py-0.5 rounded-md text-sm border shadow-sm">
+                      {issue.upvotes.length}
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>

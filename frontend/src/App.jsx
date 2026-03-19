@@ -9,6 +9,7 @@ import IssueDetails from './pages/IssueDetails';
 import Profile from './pages/Profile';
 import Feed from './pages/Feed';
 import Navbar from './components/Navbar';
+import { Toaster } from 'react-hot-toast';
 
 // Guard: redirects authority users to /dashboard for any citizen-only route
 function CitizenRoute({ children }) {
@@ -24,6 +25,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+        <Toaster position="top-center" reverseOrder={false} />
         <Navbar />
         <main className="flex-grow w-full">
           <Routes>

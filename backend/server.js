@@ -8,6 +8,7 @@ const issueRoutes = require("./routes/issueRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const postRoutes = require("./routes/postRoutes");
 const validateRoutes = require("./routes/validateRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 // Connect to database
 connectDB();
@@ -32,6 +33,7 @@ app.use("/api/issues", issueRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/validate-image", validateRoutes);
+app.use("/api/payments", paymentRoutes);
 app.use(
   express.json({
     verify: (req, res, buf) => {
