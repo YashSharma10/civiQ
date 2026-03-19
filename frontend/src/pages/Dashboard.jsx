@@ -125,47 +125,61 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-5 sm:mb-8 gap-3 sm:gap-4">
         <div>
           {(isAdmin && userDepartment) ? (
              <>
-               <h1 className="text-3xl font-extrabold text-primary flex items-center gap-3 tracking-tight">
-                 <ShieldAlert className="w-8 h-8" />
-                 {userDepartment} Department Dashboard
+               <h1 className="text-xl sm:text-3xl font-extrabold text-primary flex items-center gap-2 sm:gap-3 tracking-tight">
+                 <ShieldAlert className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
+                 <span className="leading-tight">{userDepartment} Department Dashboard</span>
                </h1>
-               <p className="mt-2 text-gray-600 font-medium">Manage and resolve active '{userDepartment}' civic issues according to priority.</p>
+               <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600 font-medium">Manage and resolve active '{userDepartment}' civic issues according to priority.</p>
              </>
           ) : (
              <>
-               <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">My Dashboard</h1>
-               <p className="mt-2 text-gray-600">Track issues you have reported or supported.</p>
+               <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">My Dashboard</h1>
+               <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600">Track issues you have reported or supported.</p>
              </>
           )}
         </div>
         
-        <div className="flex flex-col sm:flex-row flex-wrap gap-4">
-            <div className="flex bg-white rounded-xl shadow-sm border border-gray-200 p-1">
-              <button onClick={() => setViewMode('list')} className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-colors ${viewMode === 'list' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50'}`}>
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 w-full lg:w-auto">
+            <div className="flex bg-white rounded-xl shadow-sm border border-gray-200 p-1 w-max">
+              <button onClick={() => setViewMode('list')} className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-bold rounded-lg transition-colors ${viewMode === 'list' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50'}`}>
                 <List className="w-4 h-4" /> List
               </button>
-              <button onClick={() => setViewMode('map')} className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-colors ${viewMode === 'map' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50'}`}>
+              <button onClick={() => setViewMode('map')} className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-bold rounded-lg transition-colors ${viewMode === 'map' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50'}`}>
                 <MapIcon className="w-4 h-4" /> Map
               </button>
             </div>
 
             {!(isAdmin && userDepartment) && (
-              <div className="flex flex-wrap gap-2 bg-white rounded-xl shadow-sm border border-gray-200 p-1.5">
-              {['All', 'Roads', 'Water', 'Electricity', 'Garbage', 'Others'].map(cat => (
-                <button
-                key={cat}
-                onClick={() => setFilter(cat)}
-                className={`px-4 py-2 text-sm font-bold rounded-lg transition-colors ${filter === cat ? 'bg-primary text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
+              <>
+                {/* Mobile: dropdown */}
+                <select
+                  className="md:hidden w-full bg-white border border-gray-200 rounded-xl shadow-sm px-3 py-2 text-sm font-bold text-gray-700 outline-none focus:ring-2 focus:ring-primary/20"
+                  value={filter}
+                  onChange={e => setFilter(e.target.value)}
                 >
-                {cat}
-                </button>
-              ))}
-              </div>
+                  {['All', 'Roads', 'Water', 'Electricity', 'Garbage', 'Others'].map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+
+                {/* Desktop: pills */}
+                <div className="hidden md:flex flex-wrap gap-2 bg-white rounded-xl shadow-sm border border-gray-200 p-1.5">
+                  {['All', 'Roads', 'Water', 'Electricity', 'Garbage', 'Others'].map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setFilter(cat)}
+                      className={`px-4 py-2 text-sm font-bold rounded-lg transition-colors ${filter === cat ? 'bg-primary text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
         </div>
       </div>
@@ -187,7 +201,7 @@ export default function Dashboard() {
           <Link to="/report" className="mt-6 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-primary hover:bg-green-600 shadow-md hover:shadow-lg transition-all">Report an issue now</Link>
         </div>
       ) : viewMode === 'map' ? (
-        <div className="h-[600px] w-full rounded-2xl overflow-hidden shadow-sm border border-gray-200 relative z-0">
+        <div className="h-[320px] sm:h-[600px] w-full rounded-2xl overflow-hidden shadow-sm border border-gray-200 relative z-0">
           <MapContainer center={[20.5937, 78.9629]} zoom={5} className="h-full w-full z-0">
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap contributors' />
             {filteredIssues.map((issue, i) => {
@@ -212,7 +226,7 @@ export default function Dashboard() {
           </MapContainer>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
           {filteredIssues.map((issue, index) => (
             <motion.div
               key={issue._id}
@@ -221,7 +235,7 @@ export default function Dashboard() {
               transition={{ delay: index * 0.05 }}
               className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 overflow-hidden flex flex-col group"
             >
-              <Link to={`/issue/${issue._id}`} className="block h-48 w-full overflow-hidden relative">
+              <Link to={`/issue/${issue._id}`} className="block h-40 sm:h-48 w-full overflow-hidden relative">
                 {issue.imageUrl ? (
                   <img src={issue.imageUrl.startsWith('http') ? issue.imageUrl : `http://localhost:5000${issue.imageUrl}`} alt={issue.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
@@ -240,8 +254,8 @@ export default function Dashboard() {
                 )}
               </Link>
               
-              <div className="p-6 flex flex-col flex-grow">
-                <div className="flex items-center gap-2 mb-3">
+              <div className="p-4 sm:p-6 flex flex-col flex-grow">
+                <div className="flex items-center gap-2 mb-2 sm:mb-3">
                   <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-md uppercase tracking-wider">{issue.category}</span>
                   <span className="text-xs text-gray-500 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
@@ -249,15 +263,15 @@ export default function Dashboard() {
                   </span>
                 </div>
                 
-                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-primary transition-colors">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2 line-clamp-1 group-hover:text-primary transition-colors">
                   <Link to={`/issue/${issue._id}`}>{issue.title}</Link>
                 </h3>
-                <p className="text-gray-600 text-sm flex items-center gap-1 mb-4">
+                <p className="text-gray-600 text-sm flex items-center gap-1 mb-3 sm:mb-4">
                   <MapPin className="w-4 h-4 flex-shrink-0 text-gray-400" />
                   <span className="truncate">{issue.location}</span>
                 </p>
                 
-                <p className="text-gray-600 text-sm line-clamp-2 mb-6 flex-grow">{issue.description}</p>
+                <p className="text-gray-600 text-sm line-clamp-2 mb-4 sm:mb-6 flex-grow">{issue.description}</p>
                 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
                   <div className="flex gap-4">

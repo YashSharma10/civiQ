@@ -430,10 +430,10 @@ export default function Feed() {
   const feed = buildFeed();
 
   const TabBar = ({ layoutId }) => (
-    <div className="flex gap-7 border-b border-gray-200/60">
+    <div className="flex gap-5 border-b border-gray-200/60">
       {['Trending', 'Posts', 'Issues'].map(tab => (
         <button key={tab} onClick={() => setActiveTab(tab)}
-          className={`pb-3 text-[15px] cursor-pointer relative transition-colors ${activeTab === tab ? 'text-[#006aff] font-bold' : 'text-gray-500 font-semibold hover:text-gray-800'}`}>
+          className={`pb-2.5 text-[14px] cursor-pointer relative transition-colors ${activeTab === tab ? 'text-[#006aff] font-bold' : 'text-gray-500 font-semibold hover:text-gray-800'}`}>
           {tab}
           {activeTab === tab && <motion.div layoutId={layoutId} className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#006aff] rounded-t-full" />}
         </button>
@@ -491,12 +491,12 @@ export default function Feed() {
       </AnimatePresence>
 
       {/* ── MOBILE (< md) ── */}
-      <div className="md:hidden flex flex-col h-[calc(100dvh-64px)] pb-20">
-        <div className="sticky top-16 z-40 bg-white border-b border-gray-200 pt-5 px-4 pb-0 shadow-sm flex-shrink-0">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-[28px] font-extrabold text-gray-900">Feed</h1>
-            <button onClick={() => setShowCreateModal(true)} className="w-9 h-9 rounded-full border-[1.5px] border-[#006aff] flex items-center justify-center text-[#006aff] hover:bg-blue-50 transition-colors">
-              <Plus className="w-5 h-5 stroke-[2.5]" />
+      <div className="md:hidden flex flex-col" style={{ height: 'calc(100dvh - 56px)' }}>
+        <div className="sticky top-14 z-40 bg-white border-b border-gray-200 px-4 pt-3 pb-0 shadow-sm flex-shrink-0">
+          <div className="flex justify-between items-center mb-2">
+            <h1 className="text-[22px] font-extrabold text-gray-900">Feed</h1>
+            <button onClick={() => setShowCreateModal(true)} className="w-8 h-8 rounded-full border-[1.5px] border-[#006aff] flex items-center justify-center text-[#006aff] hover:bg-blue-50 transition-colors">
+              <Plus className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>
           <TabBar layoutId="feed-tab-m" />

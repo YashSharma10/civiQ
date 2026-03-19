@@ -169,9 +169,9 @@ export default function ReportIssue() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-[90vh] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto mb-8">
-        <button onClick={() => step > 1 ? setStep(step - 1) : navigate(-1)} className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors">
+    <div className="bg-gray-50 min-h-[90vh] py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto mb-5 sm:mb-8">
+        <button onClick={() => step > 1 ? setStep(step - 1) : navigate(-1)} className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors py-1">
           <ArrowLeft className="w-4 h-4" /> {step > 1 ? 'Go Back' : 'Back to Dashboard'}
         </button>
       </div>
@@ -180,18 +180,18 @@ export default function ReportIssue() {
         
         {/* STEP 1: CATEGORY SELECTION */}
         {step === 1 && (
-          <motion.div key="step1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -50 }} className="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 mt-6 max-w-4xl mx-auto">
-            <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Report a Civic Issue</h1>
-            <p className="text-gray-500 mb-8 max-w-2xl text-lg">Help us route your issue to the right authorities by securely selecting a precise category.</p>
+          <motion.div key="step1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -50 }} className="bg-white rounded-3xl p-5 sm:p-6 md:p-10 shadow-sm border border-gray-100 mt-4 sm:mt-6 max-w-4xl mx-auto">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1.5">Report a Civic Issue</h1>
+            <p className="text-gray-500 mb-5 sm:mb-8 max-w-2xl text-sm sm:text-lg">Help us route your issue to the right authorities by selecting a precise category.</p>
 
-            <div className="mb-10">
-              <h2 className="text-sm font-bold text-primary uppercase tracking-wider mb-4 flex items-center gap-2"><Layers className="w-4 h-4" /> Select Category</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="mb-6 sm:mb-10">
+              <h2 className="text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2"><Layers className="w-4 h-4" /> Select Category</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {Object.keys(categoryMap).map(cat => (
                   <button 
                     key={cat} 
                     onClick={() => handleCategorySelect(cat)}
-                    className={`p-4 text-left rounded-xl border-2 font-bold transition-all
+                    className={`p-3 sm:p-4 text-left rounded-xl border-2 font-bold text-sm sm:text-base transition-all leading-snug
                       ${category === cat ? 'border-primary bg-primary-50 text-primary scale-[1.02]' : 'border-gray-100 text-gray-700 hover:border-gray-300 hover:bg-gray-50'}`}
                   >
                     {cat}
@@ -201,14 +201,14 @@ export default function ReportIssue() {
             </div>
 
             {category && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="pt-6 border-t border-gray-100">
-                <h2 className="text-sm font-bold text-primary uppercase tracking-wider mb-4 flex items-center gap-2"><MousePointerClick className="w-4 h-4" /> Select Specific Issue</h2>
-                <div className="flex flex-wrap gap-3">
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="pt-5 border-t border-gray-100">
+                <h2 className="text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2"><MousePointerClick className="w-4 h-4" /> Select Specific Issue</h2>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   {categoryMap[category].map(sub => (
                     <button 
                       key={sub} 
                       onClick={() => handleSubCategorySelect(sub)}
-                      className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all border-2
+                      className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-bold text-sm transition-all border-2
                         ${subCategory === sub ? 'border-secondary bg-secondary text-gray-900 shadow-md' : 'border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300'}`}
                     >
                       {sub}
@@ -222,46 +222,46 @@ export default function ReportIssue() {
 
         {/* STEP 2: DUPLICATE CHECKER CAROUSEL */}
         {step === 2 && (
-          <motion.div key="step2" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 mt-6 max-w-5xl mx-auto overflow-hidden">
+          <motion.div key="step2" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="bg-white rounded-3xl p-5 sm:p-6 md:p-10 shadow-sm border border-gray-100 mt-4 sm:mt-6 max-w-5xl mx-auto overflow-hidden">
              {searching ? (
-               <div className="flex flex-col items-center justify-center py-20">
+               <div className="flex flex-col items-center justify-center py-16">
                  <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-                 <p className="text-gray-500 font-bold">Scanning database for similar issues...</p>
+                 <p className="text-gray-500 font-bold">Scanning for similar issues...</p>
                </div>
              ) : (
                <>
-                 <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Wait! Is this your issue?</h2>
-                 <p className="text-gray-500 mb-8 max-w-xl text-lg">Other citizens have recently reported similar issues. If your issue is listed below, click <strong>Raise Support</strong> to add your voice and instantly save it to your profile instead of creating a duplicate!</p>
+                 <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Wait! Is this your issue?</h2>
+                 <p className="text-gray-500 mb-5 sm:mb-8 max-w-xl text-sm sm:text-lg">Similar issues exist. Click <strong>Raise Support</strong> to add your voice instead of creating a duplicate!</p>
                  
-                 {error && <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl border border-red-200 text-sm font-medium flex items-center gap-2"><AlertCircle className="w-5 h-5"/> {error}</div>}
+                 {error && <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl border border-red-200 text-sm font-medium flex items-center gap-2"><AlertCircle className="w-5 h-5"/> {error}</div>}
 
-                 <div className="flex overflow-x-auto gap-5 pb-6 snap-x snap-mandatory pt-2 px-2 -mx-2 hide-scrollbars">
+                 <div className="flex flex-col sm:flex-row sm:overflow-x-auto gap-4 pb-2 sm:pb-6 sm:snap-x sm:snap-mandatory sm:pt-2 sm:px-2 sm:-mx-2 hide-scrollbars">
                    {existingIssues.map(issue => (
-                      <div key={issue._id} className="min-w-[280px] w-[280px] sm:min-w-[340px] bg-white border border-gray-200 rounded-2xl p-6 snap-center shrink-0 flex flex-col hover:border-primary transition-all hover:shadow-[0_10px_30px_rgba(22,163,74,0.15)] shadow-sm">
-                         <div className="flex items-center justify-between mb-4">
-                            <span className="text-[10px] font-bold bg-primary-50 text-primary px-3 py-1.5 rounded-lg uppercase tracking-wider">{issue.category} &gt; {issue.subCategory}</span>
-                            <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 bg-gray-50 px-2.5 py-1 rounded-md">
+                      <div key={issue._id} className="w-full sm:min-w-[340px] sm:w-[340px] bg-gray-50 border border-gray-200 rounded-2xl p-4 sm:p-6 sm:snap-center sm:shrink-0 flex flex-col hover:border-primary transition-all hover:shadow-[0_10px_30px_rgba(22,163,74,0.15)] shadow-sm">
+                         <div className="flex items-center justify-between mb-3">
+                            <span className="text-[10px] font-bold bg-primary-50 text-primary px-2.5 py-1 rounded-lg uppercase tracking-wider">{issue.category} &gt; {issue.subCategory}</span>
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 bg-white px-2.5 py-1 rounded-md border border-gray-100">
                                <ThumbsUp className="w-3.5 h-3.5" /> {issue.upvotes?.length || 0}
                             </div>
                          </div>
-                         <h3 className="font-extrabold text-gray-900 text-xl leading-tight mb-3 line-clamp-2">{issue.title}</h3>
-                         <p className="text-gray-500 text-sm line-clamp-3 mb-6 flex-grow leading-relaxed">{issue.description}</p>
+                         <h3 className="font-extrabold text-gray-900 text-lg sm:text-xl leading-tight mb-2 line-clamp-2">{issue.title}</h3>
+                         <p className="text-gray-500 text-sm line-clamp-2 sm:line-clamp-3 mb-4 flex-grow leading-relaxed">{issue.description}</p>
                          
                          <button 
                            onClick={() => handleSupportExisting(issue._id)}
-                           className="mt-auto w-full bg-primary text-white hover:bg-green-700 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg active:scale-95 outline-none"
+                           className="mt-auto w-full bg-primary text-white hover:bg-green-700 py-2.5 sm:py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg active:scale-95 outline-none text-sm sm:text-base"
                          >
-                           <ThumbsUp className="w-5 h-5" /> Raise Support Instead
+                           <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" /> Raise Support Instead
                          </button>
                       </div>
                    ))}
                  </div>
                  
-                 <div className="mt-8 flex flex-col items-center border-t border-gray-100 pt-8 animate-fade-in delay-300">
-                    <p className="text-sm font-medium text-gray-500 mb-4">Didn't find what you're looking for?</p>
+                 <div className="mt-6 sm:mt-8 flex flex-col items-center border-t border-gray-100 pt-6 sm:pt-8">
+                    <p className="text-sm font-medium text-gray-500 mb-3">Didn't find what you're looking for?</p>
                     <button 
                       onClick={() => setStep(3)} 
-                      className="px-10 py-4 bg-gray-900 text-white font-bold rounded-xl shadow-md hover:bg-gray-800 hover:scale-105 active:scale-95 transition-all w-full sm:w-auto text-lg"
+                      className="px-6 sm:px-10 py-3 sm:py-4 bg-gray-900 text-white font-bold rounded-xl shadow-md hover:bg-gray-800 active:scale-95 transition-all w-full sm:w-auto text-base sm:text-lg"
                     >
                       No, my issue is not listed here
                     </button>
@@ -273,9 +273,9 @@ export default function ReportIssue() {
 
         {/* STEP 3: FORM CREATION */}
         {step === 3 && (
-          <motion.div key="step3" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} className="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 mt-6 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">Provide the details</h2>
-            <div className="flex items-center gap-2 mb-8">
+          <motion.div key="step3" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} className="bg-white rounded-3xl p-5 sm:p-6 md:p-10 shadow-sm border border-gray-100 mt-4 sm:mt-6 max-w-4xl mx-auto">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900 mb-2">Provide the details</h2>
+            <div className="flex items-center gap-2 mb-5 sm:mb-8">
                <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-md text-xs font-bold">{category}</span>
                <span className="text-gray-300">&gt;</span>
                <span className="bg-primary-50 text-primary px-3 py-1 rounded-md text-xs font-bold">{subCategory}</span>
@@ -338,7 +338,7 @@ export default function ReportIssue() {
                     className="block w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-gray-900 text-sm"
                   />
                 </div>
-                <div className="h-64 rounded-xl overflow-hidden border border-gray-200 z-0 relative shadow-inner">
+                <div className="h-48 sm:h-64 rounded-xl overflow-hidden border border-gray-200 z-0 relative shadow-inner">
                   <MapContainer center={[lat, lng]} zoom={5} scrollWheelZoom={true} className="h-full w-full relative z-0">
                     <TileLayer
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -383,11 +383,11 @@ export default function ReportIssue() {
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-gray-100">
+              <div className="pt-5 sm:pt-6 border-t border-gray-100">
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-xl shadow-md text-lg font-bold text-gray-900 bg-secondary hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary disabled:opacity-70 disabled:cursor-not-allowed transition-all hover:-translate-y-1"
+                  className="w-full flex justify-center items-center py-3.5 sm:py-4 px-4 border border-transparent rounded-xl shadow-md text-base sm:text-lg font-bold text-gray-900 bg-secondary hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary disabled:opacity-70 disabled:cursor-not-allowed transition-all active:scale-95"
                 >
                   {submitting ? (
                     <div className="flex items-center gap-2">
@@ -395,7 +395,7 @@ export default function ReportIssue() {
                        <span>Submitting...</span>
                     </div>
                   ) : (
-                     <span className="flex items-center gap-2"><CheckCircle className="w-6 h-6"/> Submit Formal Report</span>
+                     <span className="flex items-center gap-2"><CheckCircle className="w-5 h-5 sm:w-6 sm:h-6"/> Submit Formal Report</span>
                   )}
                 </button>
               </div>
