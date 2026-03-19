@@ -47,6 +47,7 @@ export default function Dashboard() {
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
+  const [activityFilter, setActivityFilter] = useState('all');
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'map'
   const { user } = useUser();
   const navigate = useNavigate();
@@ -112,7 +113,15 @@ export default function Dashboard() {
   const effectiveFilter = (isAdmin && userDepartment && userDepartment !== 'All') ? userDepartment : filter;
   const userIssues = isAdmin 
     ? processedIssues 
-    : processedIssues.filter(issue => user && (issue.authorId === user.id || issue.upvotes?.includes(user.id)));
+    : processedIssues.filter(issue => {
+        if (!user) return false;
+        const isAuthor = issue.authorId === user.id;
+        const isSupporter = issue.upvotes?.includes(user.id);
+        
+        if (activityFilter === 'reported') return isAuthor;
+        if (activityFilter === 'supported') return isSupporter;
+        return isAuthor || isSupporter;
+      });
   const filteredIssues = effectiveFilter === 'All' ? userIssues : userIssues.filter(issue => issue.category === effectiveFilter);
 
   const getStatusColor = (status) => {
@@ -140,6 +149,11 @@ export default function Dashboard() {
              <>
                <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">My Dashboard</h1>
                <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600">Track issues you have reported or supported.</p>
+               <div className="mt-4 flex gap-2 border-b border-gray-200 pb-2">
+                 <button onClick={() => setActivityFilter('all')} className={`pb-2 px-2 text-sm font-bold border-b-2 transition-colors ${activityFilter === 'all' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>All Activity</button>
+                 <button onClick={() => setActivityFilter('reported')} className={`pb-2 px-2 text-sm font-bold border-b-2 transition-colors ${activityFilter === 'reported' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Reported</button>
+                 <button onClick={() => setActivityFilter('supported')} className={`pb-2 px-2 text-sm font-bold border-b-2 transition-colors ${activityFilter === 'supported' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Supported</button>
+               </div>
              </>
           )}
         </div>
@@ -250,6 +264,16 @@ export default function Dashboard() {
                   <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-sm bg-red-100 text-red-800 border-red-200 flex items-center gap-1.5 z-10 transition-transform hover:scale-105 cursor-help" title={`Priority Score: ${issue.priorityScore}`}>
                     <Flame className="w-3.5 h-3.5" />
                     Urgent {issue.priorityScore > 0 ? `(${issue.priorityScore})` : ''}
+                  </div>
+                )}
+                {!isAdmin && user && issue.authorId === user.id && (
+                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-sm bg-primary text-white border-primary-200 z-10 transition-transform hover:scale-105">
+                    Your Issue
+                  </div>
+                )}
+                {!isAdmin && user && issue.authorId !== user.id && issue.upvotes?.includes(user.id) && (
+                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-sm bg-secondary text-gray-900 border-yellow-400 z-10 transition-transform hover:scale-105 flex items-center gap-1">
+                    <ThumbsUp className="w-3 h-3 fill-gray-900" /> Supported
                   </div>
                 )}
               </Link>
