@@ -80,8 +80,10 @@ async function handleTextMessage(msg, session) {
   if (session.step === 'INIT') {
     if (text.toLowerCase() === 'report') {
       session.step = 'WAITING_FOR_CATEGORY';
+      console.log('About to send WhatsApp message to', phone, 'with text:', 'What is the issue category? (e.g., pothole, garbage, streetlight)');
       await sendWhatsAppMessage(phone, 'What is the issue category? (e.g., pothole, garbage, streetlight)');
     } else {
+      console.log('About to send WhatsApp message to', phone, 'with text:', 'Send "report" to start reporting a civic issue.');
       await sendWhatsAppMessage(phone, 'Send "report" to start reporting a civic issue.');
     }
   } else if (session.step === 'WAITING_FOR_CATEGORY') {
@@ -92,6 +94,7 @@ async function handleTextMessage(msg, session) {
     session.data.category = category;
     log(`[${phone}] Category set: ${category}`);
     session.step = 'WAITING_FOR_IMAGE';
+    console.log('About to send WhatsApp message to', phone, 'with text:', 'Please send an image of the issue.');
     await sendWhatsAppMessage(phone, 'Please send an image of the issue.');
   } else if (session.step === 'WAITING_FOR_DESCRIPTION') {
     session.data.description = msg.text.body;
@@ -105,9 +108,11 @@ async function handleTextMessage(msg, session) {
     });
     await issue.save();
     log(`[${phone}] Issue saved: ${JSON.stringify(issue)}`);
+    console.log('About to send WhatsApp message to', phone, 'with text:', 'Thank you! Your issue has been reported.');
     await sendWhatsAppMessage(phone, 'Thank you! Your issue has been reported.');
     clearSession(phone);
   } else {
+    console.log('About to send WhatsApp message to', phone, 'with text:', 'Please follow the instructions.');
     await sendWhatsAppMessage(phone, 'Please follow the instructions.');
   }
 }
@@ -117,11 +122,13 @@ async function handleImageMessage(msg, session) {
   if (session.step === 'WAITING_FOR_IMAGE') {
     const mediaId = msg?.image?.id;
     if (!mediaId) {
+      console.log('About to send WhatsApp message to', phone, 'with text:', 'Could not get image. Please resend.');
       await sendWhatsAppMessage(phone, 'Could not get image. Please resend.');
       return;
     }
     const mediaUrl = await fetchMediaUrl(mediaId);
     if (!mediaUrl) {
+      console.log('About to send WhatsApp message to', phone, 'with text:', 'Could not fetch image. Please try again.');
       await sendWhatsAppMessage(phone, 'Could not fetch image. Please try again.');
       return;
     }
@@ -134,8 +141,10 @@ async function handleImageMessage(msg, session) {
       log(`[${phone}] Gemini image category: ${geminiCategory}`);
     }
     session.step = 'WAITING_FOR_LOCATION';
+    console.log('About to send WhatsApp message to', phone, 'with text:', 'Please share your location.');
     await sendWhatsAppMessage(phone, 'Please share your location.');
   } else {
+    console.log('About to send WhatsApp message to', phone, 'with text:', 'Please follow the instructions.');
     await sendWhatsAppMessage(phone, 'Please follow the instructions.');
   }
 }
@@ -146,14 +155,17 @@ async function handleLocationMessage(msg, session) {
     const lat = msg?.location?.latitude;
     const lng = msg?.location?.longitude;
     if (lat == null || lng == null) {
+      console.log('About to send WhatsApp message to', phone, 'with text:', 'Could not get location. Please resend.');
       await sendWhatsAppMessage(phone, 'Could not get location. Please resend.');
       return;
     }
     session.data.location = { lat, lng };
     log(`[${phone}] Location set: ${lat},${lng}`);
     session.step = 'WAITING_FOR_DESCRIPTION';
+    console.log('About to send WhatsApp message to', phone, 'with text:', 'Please describe the issue.');
     await sendWhatsAppMessage(phone, 'Please describe the issue.');
   } else {
+    console.log('About to send WhatsApp message to', phone, 'with text:', 'Please follow the instructions.');
     await sendWhatsAppMessage(phone, 'Please follow the instructions.');
   }
 }
