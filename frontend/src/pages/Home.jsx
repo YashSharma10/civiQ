@@ -266,7 +266,7 @@ export default function Home() {
         <motion.div animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute top-1/4 left-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl z-0" />
         <motion.div animate={{ y: [0, 30, 0], rotate: [0, -10, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-1/4 right-10 w-48 h-48 bg-secondary/20 rounded-full blur-3xl z-0" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center mt-16 sm:mt-24">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center mt-8 sm:mt-16">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -281,7 +281,7 @@ export default function Home() {
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight max-w-5xl"
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight max-w-5xl"
           >
             Empowering Citizens to <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-accent to-primary">Improve Our City</span>
@@ -291,7 +291,7 @@ export default function Home() {
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
-            className="mt-8 max-w-2xl mx-auto text-xl md:text-2xl text-gray-300 font-light leading-relaxed"
+            className="mt-5 max-w-2xl mx-auto text-base sm:text-xl md:text-2xl text-gray-300 font-light leading-relaxed px-2"
           >
             A transparent, modern platform for reporting and managing civic issues. Together we can build safer, cleaner, and better communities.
           </motion.p>
@@ -300,7 +300,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-12 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 w-full sm:w-auto"
+            className="mt-8 flex flex-col sm:flex-row justify-center gap-3 sm:gap-6 w-full sm:w-auto"
           >
             <Link to="/report" className="report-issue-btn">
               <span className="text whitespace-nowrap">Report an Issue</span>
@@ -325,12 +325,12 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-14 sm:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20 max-w-3xl mx-auto flex flex-col items-center">
-            <h2 className="bg-[#006aff] text-white px-4 py-1.5 rounded-md font-extrabold border-2 border-gray-900 shadow-[2px_2px_0px_#111827] tracking-wide uppercase text-xs mb-6 w-max">Simple Process</h2>
-            <h3 className="font-['Playfair_Display'] text-5xl font-extrabold text-gray-900 sm:text-6xl mb-6">How CiviQ Works</h3>
-            <p className="text-xl text-gray-600 font-medium leading-relaxed">Making a difference in your neighborhood has never been easier. Three simple steps to a better community.</p>
+          <div className="text-center mb-10 sm:mb-20 max-w-3xl mx-auto flex flex-col items-center">
+            <h2 className="bg-[#006aff] text-white px-4 py-1.5 rounded-md font-extrabold border-2 border-gray-900 shadow-[2px_2px_0px_#111827] tracking-wide uppercase text-xs mb-4 w-max">Simple Process</h2>
+            <h3 className="font-['Playfair_Display'] text-3xl sm:text-5xl sm:text-6xl font-extrabold text-gray-900 mb-4">How CiviQ Works</h3>
+            <p className="text-base sm:text-xl text-gray-600 font-medium leading-relaxed">Making a difference in your neighborhood has never been easier. Three simple steps to a better community.</p>
           </div>
 
           <motion.div
@@ -344,13 +344,13 @@ export default function Home() {
               <motion.div
                 key={index}
                 variants={fadeInUp}
-                className="group relative bg-white rounded-2xl p-10 transition-all duration-300 border-2 border-gray-900 shadow-[6px_6px_0px_#111827] hover:-translate-y-2 hover:translate-x-1 hover:shadow-[10px_10px_0px_#111827] overflow-hidden"
+                className="group relative bg-white rounded-2xl p-6 sm:p-10 transition-all duration-300 border-2 border-gray-900 shadow-[6px_6px_0px_#111827] hover:-translate-y-2 hover:translate-x-1 hover:shadow-[10px_10px_0px_#111827] overflow-hidden"
               >
-                <div className={`w-16 h-16 ${feature.color} rounded-xl border-2 border-gray-900 shadow-[3px_3px_0px_#111827] flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                <div className={`w-14 h-14 sm:w-16 sm:h-16 ${feature.color} rounded-xl border-2 border-gray-900 shadow-[3px_3px_0px_#111827] flex items-center justify-center mb-5 sm:mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
                   {feature.icon}
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
-                <p className="text-gray-700 font-medium leading-relaxed text-lg">{feature.description}</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-700 font-medium leading-relaxed text-base sm:text-lg">{feature.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -373,7 +373,7 @@ export default function Home() {
                 <div className="w-12 h-12 bg-white rounded-full border-2 border-gray-900 shadow-[2px_2px_0px_#111827] flex items-center justify-center text-gray-900 mb-3">
                   {stat.icon}
                 </div>
-                <div className="font-['Playfair_Display'] text-5xl font-extrabold text-[#006aff] mb-2">{stat.value}</div>
+                <div className="font-['Playfair_Display'] text-4xl sm:text-5xl font-extrabold text-[#006aff] mb-2">{stat.value}</div>
                 <div className="text-gray-800 font-bold uppercase tracking-wider text-sm">{stat.label}</div>
               </motion.div>
             ))}
@@ -382,10 +382,10 @@ export default function Home() {
       </section>
 
       {/* Categories Showcase */}
-      <section className="py-24 bg-[#006aff]/10 border-y-2 border-gray-900">
+      <section className="py-14 sm:py-24 bg-[#006aff]/10 border-y-2 border-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-['Playfair_Display'] text-5xl font-extrabold text-gray-900 mb-6">Report Any Issue</h2>
-          <p className="text-xl text-gray-700 font-medium max-w-2xl mx-auto mb-16">Our platform intelligently categorizes issues to route them to the correct local authorities instantly.</p>
+          <h2 className="font-['Playfair_Display'] text-3xl sm:text-5xl font-extrabold text-gray-900 mb-4">Report Any Issue</h2>
+          <p className="text-base sm:text-xl text-gray-700 font-medium max-w-2xl mx-auto mb-8 sm:mb-16">Our platform intelligently categorizes issues to route them to the correct local authorities instantly.</p>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {categories.map((cat, i) => (
@@ -408,19 +408,19 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-28 bg-[#006aff] border-b-2 border-gray-900 overflow-hidden">
+      <section className="relative py-16 sm:py-28 bg-[#006aff] border-b-2 border-gray-900 overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1587474260580-589f81d596ea?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center mix-blend-multiply opacity-20" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center text-white">
-          <h2 className="font-['Playfair_Display'] text-5xl md:text-[70px] leading-tight font-extrabold mb-6">Ready to see a change?</h2>
-          <p className="text-xl text-white/90 mb-12 font-medium">Join thousands of citizens who are actively making their neighborhoods cleaner, safer, and better for everyone.</p>
-          <Link to="/register" className="inline-flex items-center justify-center px-10 py-5 bg-[#252525] text-white rounded-2xl font-bold text-xl border-2 border-[#fafafa] shadow-[6px_6px_0px_#fafafa] hover:translate-y-1 hover:shadow-[2px_2px_0px_#fafafa] transition-all">
+          <h2 className="font-['Playfair_Display'] text-3xl sm:text-5xl md:text-[70px] leading-tight font-extrabold mb-4">Ready to see a change?</h2>
+          <p className="text-base sm:text-xl text-white/90 mb-8 sm:mb-12 font-medium">Join thousands of citizens who are actively making their neighborhoods cleaner, safer, and better for everyone.</p>
+          <Link to="/register" className="inline-flex items-center justify-center px-6 py-3 sm:px-10 sm:py-5 bg-[#252525] text-white rounded-2xl font-bold text-base sm:text-xl border-2 border-[#fafafa] shadow-[6px_6px_0px_#fafafa] hover:translate-y-1 hover:shadow-[2px_2px_0px_#fafafa] transition-all">
             CREATE FREE ACCOUNT
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 text-center border-t-8 border-[#252525]">
+      <footer className="bg-gray-900 text-white py-10 sm:py-16 text-center border-t-8 border-[#252525]">
         <div className="flex items-center justify-center gap-2 mb-6">
           <Shield className="w-8 h-8 text-[#006aff]" />
           <span className="text-3xl font-bold tracking-tight">Civi<span className="text-[#006aff]">Q</span></span>
