@@ -94,8 +94,8 @@ async function handleTextMessage(msg, session) {
     if (text.toLowerCase() === 'report') {
       session.step = 'WAITING_FOR_CATEGORY';
       console.log('Transition to WAITING_FOR_CATEGORY');
-      console.log('About to send WhatsApp message to', phone, 'with text:', 'What is the issue category? (e.g., pothole, garbage, streetlight)');
-      await sendWhatsAppMessage(phone, 'What is the issue category? (e.g., pothole, garbage, streetlight)');
+      console.log('About to send WhatsApp message to', phone, 'with text:', 'What is the issue category? (e.g., Roads, Water, Garbage, Electricity, Waste Management, Public Safety, Other Issues)');
+      await sendWhatsAppMessage(phone, 'What is the issue category? (e.g., Roads, Water, Garbage, Electricity, Waste Management, Public Safety, Other Issues)');
     } else {
       console.log('About to send WhatsApp message to', phone, 'with text:', 'Send "report" to start reporting a civic issue.');
       await sendWhatsAppMessage(phone, 'Send "report" to start reporting a civic issue.');
@@ -109,8 +109,11 @@ async function handleTextMessage(msg, session) {
       category = geminiCategory;
       console.log('Gemini detected category:', geminiCategory);
     }
-    session.data.category = category;
-    log(`[${phone}] Category set: ${category}`);
+    // Map to allowed enum values if possible
+    const allowedCategories = ['Roads & Transit', 'Water & Sanitation', 'Electricity', 'Waste Management', 'Public Safety', 'Other Issues', 'Roads', 'Water', 'Garbage', 'Others'];
+    let mappedCategory = allowedCategories.find(cat => cat.toLowerCase() === category.toLowerCase()) || 'Other Issues';
+    session.data.category = mappedCategory;
+    log(`[${phone}] Category set: ${mappedCategory}`);
     session.step = 'WAITING_FOR_IMAGE';
     console.log('Transition to WAITING_FOR_IMAGE');
     console.log('About to send WhatsApp message to', phone, 'with text:', 'Please send an image of the issue.');
@@ -118,13 +121,19 @@ async function handleTextMessage(msg, session) {
   } else if (session.step === 'WAITING_FOR_DESCRIPTION') {
     session.data.description = msg.text.body;
     console.log('Saving issue to DB:', session.data);
-    // Save issue
+    // Save issue with required legacy fields and WhatsApp fields
     const issue = new Issue({
-      userPhone: phone,
-      category: session.data.category,
+      // Required legacy fields (dummy/fallback for WhatsApp)
+      title: session.data.category + ' issue reported via WhatsApp',
       description: session.data.description,
-      imageUrl: session.data.imageUrl,
-      location: session.data.location
+      category: session.data.category,
+      authorName: 'WhatsApp User',
+      authorId: phone,
+      // WhatsApp-specific fields
+      userPhone: phone,
+      waCategory: session.data.category,
+      waImageUrl: session.data.imageUrl,
+      waLocation: session.data.location ? { lat: session.data.location.lat, lng: session.data.location.lng } : undefined
     });
     await issue.save();
     log(`[${phone}] Issue saved: ${JSON.stringify(issue)}`);
