@@ -257,7 +257,7 @@ export default function Home() {
       <section className="relative min-h-[90vh] flex items-center justify-center bg-gray-900 overflow-hidden pt-16">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=2000&q=80')] bg-cover bg-center object-cover mix-blend-overlay opacity-40" />
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=2000&q=80')] bg-cover bg-[center_30%] mix-blend-overlay opacity-40" />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-secondary/30 mix-blend-multiply" />
         </div>
@@ -266,7 +266,7 @@ export default function Home() {
         <motion.div animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute top-1/4 left-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl z-0" />
         <motion.div animate={{ y: [0, 30, 0], rotate: [0, -10, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-1/4 right-10 w-48 h-48 bg-secondary/20 rounded-full blur-3xl z-0" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center mt-16 sm:mt-24">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -302,11 +302,15 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="mt-12 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 w-full sm:w-auto"
           >
-            <Link to="/report" className="group flex justify-center items-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-bold text-lg hover:bg-green-700 transition-all shadow-[0_0_40px_-10px_rgba(22,163,74,0.5)] hover:shadow-[0_0_60px_-15px_rgba(22,163,74,0.7)] hover:-translate-y-1">
-              Report an Issue
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Link to="/report" className="report-issue-btn">
+              <span className="text whitespace-nowrap">Report an Issue</span>
+              <span className="svg">
+                <svg xmlns="http://www.w3.org/2000/svg" width={50} height={20} viewBox="0 0 38 15" fill="none">
+                  <path fill="white" d="M10 7.519l-.939-.344h0l.939.344zm14.386-1.205l-.981-.192.981.192zm1.276 5.509l.537.843.148-.094.107-.139-.792-.611zm4.819-4.304l-.385-.923h0l.385.923zm7.227.707a1 1 0 0 0 0-1.414L31.343.448a1 1 0 0 0-1.414 0 1 1 0 0 0 0 1.414l5.657 5.657-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364zM1 7.519l.554.833.029-.019.094-.061.361-.23 1.277-.77c1.054-.609 2.397-1.32 3.629-1.787.617-.234 1.17-.392 1.623-.455.477-.066.707-.008.788.034.025.013.031.021.039.034a.56.56 0 0 1 .058.235c.029.327-.047.906-.39 1.842l1.878.689c.383-1.044.571-1.949.505-2.705-.072-.815-.45-1.493-1.16-1.865-.627-.329-1.358-.332-1.993-.244-.659.092-1.367.305-2.056.566-1.381.523-2.833 1.297-3.921 1.925l-1.341.808-.385.245-.104.068-.028.018c-.011.007-.011.007.543.84zm8.061-.344c-.198.54-.328 1.038-.36 1.484-.032.441.024.94.325 1.364.319.45.786.64 1.21.697.403.054.824-.001 1.21-.09.775-.179 1.694-.566 2.633-1.014l3.023-1.554c2.115-1.122 4.107-2.168 5.476-2.524.329-.086.573-.117.742-.115s.195.038.161.014c-.15-.105.085-.139-.076.685l1.963.384c.192-.98.152-2.083-.74-2.707-.405-.283-.868-.37-1.28-.376s-.849.069-1.274.179c-1.65.43-3.888 1.621-5.909 2.693l-2.948 1.517c-.92.439-1.673.743-2.221.87-.276.064-.429.065-.492.057-.043-.006.066.003.155.127.07.099.024.131.038-.063.014-.187.078-.49.243-.94l-1.878-.689zm14.343-1.053c-.361 1.844-.474 3.185-.413 4.161.059.95.294 1.72.811 2.215.567.544 1.242.546 1.664.459a2.34 2.34 0 0 0 .502-.167l.15-.076.049-.028.018-.011c.013-.008.013-.008-.524-.852l-.536-.844.019-.012c-.038.018-.064.027-.084.032-.037.008.053-.013.125.056.021.02-.151-.135-.198-.895-.046-.734.034-1.887.38-3.652l-1.963-.384zm2.257 5.701l.791.611.024-.031.08-.101.311-.377 1.093-1.213c.922-.954 2.005-1.894 2.904-2.27l-.771-1.846c-1.31.547-2.637 1.758-3.572 2.725l-1.184 1.314-.341.414-.093.117-.025.032c-.01.013-.01.013.781.624zm5.204-3.381c.989-.413 1.791-.42 2.697-.307.871.108 2.083.385 3.437.385v-2c-1.197 0-2.041-.226-3.19-.369-1.114-.139-2.297-.146-3.715.447l.771 1.846z" />
+                </svg>
+              </span>
             </Link>
-            <Link to="/dashboard" className="px-8 py-4 flex justify-center items-center bg-white text-gray-900 border border-white/20 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all backdrop-blur-md hover:-translate-y-1 shadow-lg">
+            <Link to="/dashboard" className="live-map-btn mt-4 sm:mt-2">
               Explore Live Map
             </Link>
           </motion.div>
@@ -323,10 +327,10 @@ export default function Home() {
       {/* Features Section */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20 max-w-3xl mx-auto">
-            <h2 className="text-primary font-bold tracking-wide uppercase text-sm mb-2">Simple Process</h2>
-            <h3 className="text-4xl font-extrabold text-gray-900 sm:text-5xl mb-6">How CiviQ Works</h3>
-            <p className="text-xl text-gray-600 font-light leading-relaxed">Making a difference in your neighborhood has never been easier. Three simple steps to a better community.</p>
+          <div className="text-center mb-20 max-w-3xl mx-auto flex flex-col items-center">
+            <h2 className="bg-[#006aff] text-white px-4 py-1.5 rounded-md font-extrabold border-2 border-gray-900 shadow-[2px_2px_0px_#111827] tracking-wide uppercase text-xs mb-6 w-max">Simple Process</h2>
+            <h3 className="font-['Playfair_Display'] text-5xl font-extrabold text-gray-900 sm:text-6xl mb-6">How CiviQ Works</h3>
+            <p className="text-xl text-gray-600 font-medium leading-relaxed">Making a difference in your neighborhood has never been easier. Three simple steps to a better community.</p>
           </div>
 
           <motion.div
@@ -340,14 +344,13 @@ export default function Home() {
               <motion.div
                 key={index}
                 variants={fadeInUp}
-                className="group relative bg-white rounded-3xl p-10 hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:-translate-y-2 overflow-hidden"
+                className="group relative bg-white rounded-2xl p-10 transition-all duration-300 border-2 border-gray-900 shadow-[6px_6px_0px_#111827] hover:-translate-y-2 hover:translate-x-1 hover:shadow-[10px_10px_0px_#111827] overflow-hidden"
               >
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className={`w-16 h-16 ${feature.color} rounded-2xl flex items-center justify-center shadow-sm mb-8 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-16 h-16 ${feature.color} rounded-xl border-2 border-gray-900 shadow-[3px_3px_0px_#111827] flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
                   {feature.icon}
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed text-lg">{feature.description}</p>
+                <p className="text-gray-700 font-medium leading-relaxed text-lg">{feature.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -355,7 +358,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-gray-50 relative z-10 -mt-10">
+      <section className="py-12 bg-gray-50 relative z-10 -mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {stats.map((stat, i) => (
@@ -365,13 +368,13 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-6 flex flex-col items-center justify-center shadow-lg border border-gray-100 shadow-gray-200/50 hover:-translate-y-1 transition-transform"
+                className="bg-white rounded-2xl p-6 flex flex-col items-center justify-center border-2 border-gray-900 shadow-[6px_6px_0px_#111827] hover:-translate-y-1 hover:translate-x-1 hover:shadow-[8px_8px_0px_#111827] transition-transform"
               >
-                <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary mb-3">
+                <div className="w-12 h-12 bg-white rounded-full border-2 border-gray-900 shadow-[2px_2px_0px_#111827] flex items-center justify-center text-gray-900 mb-3">
                   {stat.icon}
                 </div>
-                <div className="text-4xl font-extrabold text-gray-900 mb-1">{stat.value}</div>
-                <div className="text-gray-500 font-medium">{stat.label}</div>
+                <div className="font-['Playfair_Display'] text-5xl font-extrabold text-[#006aff] mb-2">{stat.value}</div>
+                <div className="text-gray-800 font-bold uppercase tracking-wider text-sm">{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -379,10 +382,10 @@ export default function Home() {
       </section>
 
       {/* Categories Showcase */}
-      <section className="py-24 bg-white border-y border-gray-100">
+      <section className="py-24 bg-[#006aff]/10 border-y-2 border-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-extrabold text-gray-900 mb-6">Report Any Issue</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-16">Our platform intelligently categorizes issues to route them to the correct local authorities instantly.</p>
+          <h2 className="font-['Playfair_Display'] text-5xl font-extrabold text-gray-900 mb-6">Report Any Issue</h2>
+          <p className="text-xl text-gray-700 font-medium max-w-2xl mx-auto mb-16">Our platform intelligently categorizes issues to route them to the correct local authorities instantly.</p>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {categories.map((cat, i) => (
@@ -392,12 +395,12 @@ export default function Home() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="flex flex-col items-center justify-center p-6 bg-gray-50 rounded-2xl hover:bg-gray-100 hover:shadow-md transition-all cursor-pointer border border-gray-100 group"
+                className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl hover:bg-gray-100 transition-all cursor-pointer border-2 border-gray-900 shadow-[4px_4px_0px_#111827] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#111827] group"
               >
-                <div className={`w-14 h-14 ${cat.color} rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                <div className={`w-14 h-14 ${cat.color} rounded-full border-2 border-gray-900 shadow-[2px_2px_0px_#111827] flex items-center justify-center mb-4 group-hover:scale-110 group-hover:-rotate-6 transition-transform`}>
                   {cat.icon}
                 </div>
-                <span className="font-bold text-gray-800 text-sm text-center group-hover:text-primary transition-colors">{cat.name}</span>
+                <span className="font-bold text-gray-900 text-sm text-center">{cat.name}</span>
               </motion.div>
             ))}
           </div>
@@ -405,24 +408,24 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-24 bg-primary overflow-hidden">
+      <section className="relative py-28 bg-[#006aff] border-b-2 border-gray-900 overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1587474260580-589f81d596ea?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center mix-blend-multiply opacity-20" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center text-white">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-6">Ready to see a change?</h2>
-          <p className="text-xl text-primary-100 mb-10 font-light">Join thousands of citizens who are actively making their neighborhoods cleaner, safer, and better for everyone.</p>
-          <Link to="/register" className="inline-flex items-center justify-center px-10 py-5 bg-white text-primary rounded-xl font-bold text-xl hover:bg-gray-50 transition-colors shadow-2xl hover:scale-105 duration-300">
-            Create Free Account
+          <h2 className="font-['Playfair_Display'] text-5xl md:text-[70px] leading-tight font-extrabold mb-6">Ready to see a change?</h2>
+          <p className="text-xl text-white/90 mb-12 font-medium">Join thousands of citizens who are actively making their neighborhoods cleaner, safer, and better for everyone.</p>
+          <Link to="/register" className="inline-flex items-center justify-center px-10 py-5 bg-[#252525] text-white rounded-2xl font-bold text-xl border-2 border-[#fafafa] shadow-[6px_6px_0px_#fafafa] hover:translate-y-1 hover:shadow-[2px_2px_0px_#fafafa] transition-all">
+            CREATE FREE ACCOUNT
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-12 text-center pb-24 md:pb-12">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <Shield className="w-6 h-6 text-primary" />
-          <span className="text-2xl font-bold text-white tracking-tight">Civi<span className="text-primary">Q</span></span>
+      <footer className="bg-gray-900 text-white py-16 text-center border-t-8 border-[#252525]">
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <Shield className="w-8 h-8 text-[#006aff]" />
+          <span className="text-3xl font-bold tracking-tight">Civi<span className="text-[#006aff]">Q</span></span>
         </div>
-        <p>© 2026 CiviQ Platform. Built for the community.</p>
+        <p className="text-gray-400 font-medium tracking-wide">© 2026 CiviQ Platform. Built for the community.</p>
       </footer>
     </div>
   );

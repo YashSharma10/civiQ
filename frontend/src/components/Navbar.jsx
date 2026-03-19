@@ -10,34 +10,46 @@ export default function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
+  const isHome = isActive('/');
+  const textColor = isHome ? 'text-white' : 'text-gray-900';
+  const textMuted = isHome ? 'text-white/80' : 'text-gray-600';
+  const borderColor = isHome ? 'border-white' : 'border-gray-900';
+  const hoverColor = isHome ? 'hover:text-white' : 'hover:text-gray-900';
+
   return (
     <>
       {/* Top Navbar */}
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
+      <nav className={`w-full z-50 transition-all duration-300 ${isHome ? 'absolute top-0 left-0 bg-transparent py-4' : 'sticky top-0 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <Link to="/" className="flex items-center gap-2 group">
-              <Shield className="w-8 h-8 text-primary group-hover:text-secondary transition-colors" />
-              <span className="font-bold text-xl tracking-tight text-gray-900">Civi<span className="text-primary">Q</span></span>
+              <Shield className={`w-8 h-8 ${isHome ? 'text-white' : 'text-primary'} group-hover:text-secondary transition-colors`} />
+              <span className={`font-bold text-xl tracking-tight ${textColor}`}>Civi<span className={isHome ? 'text-white' : 'text-primary'}>Q</span></span>
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className={`font-medium text-sm transition-colors ${isActive('/') ? 'text-primary' : 'text-gray-500 hover:text-gray-900'}`}>Home</Link>
-              <Link to="/dashboard" className={`font-medium text-sm transition-colors ${isActive('/dashboard') ? 'text-primary' : 'text-gray-500 hover:text-gray-900'}`}>Dashboard</Link>
-              <SignedIn>
-                  <Link to="/report" className={`font-medium text-sm transition-colors ${isActive('/report') ? 'text-primary' : 'text-gray-500 hover:text-gray-900'}`}>Report Issue</Link>
-                  {/* <Link to="/profile" className={`font-medium text-sm transition-colors ${isActive('/profile') ? 'text-primary' : 'text-gray-500 hover:text-gray-900'}`}>Profile</Link> */}
-                  <div className="flex items-center gap-4 ml-4 pl-4 border-l border-gray-200">
+            {/* Desktop Navigation & Actions */}
+            <div className="hidden md:flex items-center space-x-10 ml-auto">
+              {/* Links */}
+              <div className="flex items-center space-x-8">
+                <Link to="/" className={`text-[15px] font-medium transition-colors ${isActive('/') ? textColor : `${textMuted} hover:text-gray-900`}`}>Home</Link>
+                <Link to="/dashboard" className={`text-[15px] font-medium transition-colors ${isActive('/dashboard') ? textColor : `${textMuted} hover:text-gray-900`}`}>Dashboard</Link>
+                <SignedIn>
+                    <Link to="/report" className={`text-[15px] font-medium transition-colors ${isActive('/report') ? textColor : `${textMuted} hover:text-gray-900`}`}>Report Issue</Link>
+                </SignedIn>
+              </div>
+
+              {/* Actions */}
+              <div className={`flex items-center pl-6 border-l ${isHome ? 'border-white/30' : 'border-gray-200'}`}>
+                <SignedIn>
                     <UserButton />
-                  </div>
-              </SignedIn>
-              <SignedOut>
-                <div className="flex items-center gap-4 ml-4 pl-4 border-l border-gray-200">
-                  <Link to="/login" className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">Login</Link>
-                  <Link to="/register" className="text-sm font-bold bg-primary text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-sm">Sign Up</Link>
-                </div>
-              </SignedOut>
+                </SignedIn>
+                <SignedOut>
+                    <div className="flex items-center space-x-6">
+                      <Link to="/login" className={`text-[13px] font-medium tracking-wide ${textColor} ${hoverColor} transition-colors uppercase`}>Login</Link>
+                      <Link to="/register" className={`text-[13px] font-bold tracking-wide uppercase border-b-2 ${borderColor} ${textColor} pb-0.5 ${hoverColor} transition-colors`}>Sign Up</Link>
+                    </div>
+                </SignedOut>
+              </div>
             </div>
 
             {/* Mobile Top Actions (Logout/Login) */}
