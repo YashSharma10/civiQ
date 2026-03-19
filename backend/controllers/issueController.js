@@ -181,6 +181,18 @@ const reviewIssue = async (req, res) => {
     }
 };
 
+// @desc    Get upvoted issues
+// @route   GET /api/issues/upvoted
+// @access  Private
+const getUpvotedIssues = async (req, res) => {
+    try {
+        const issues = await Issue.find({ upvotes: req.auth.userId }).sort({ createdAt: -1 });
+        res.status(200).json(issues);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getIssues,
     getIssueById,
@@ -189,5 +201,6 @@ module.exports = {
     upvoteIssue,
     addComment,
     getUserIssues,
-    reviewIssue
+    reviewIssue,
+    getUpvotedIssues
 };

@@ -8,7 +8,8 @@ const {
     upvoteIssue,
     addComment,
     getUserIssues,
-    reviewIssue
+    reviewIssue,
+    getUpvotedIssues
 } = require('../controllers/issueController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
@@ -19,7 +20,10 @@ router.route('/')
 router.route('/my')
     .get(protect, getUserIssues);
 
-// Ensure /my is ABOVE /:id so it doesn't get matched as an ID
+router.route('/upvoted')
+    .get(protect, getUpvotedIssues);
+
+// Ensure /my and /upvoted are ABOVE /:id so it doesn't get matched as an ID
 router.route('/:id')
     .get(getIssueById);
 

@@ -64,24 +64,32 @@ const ProgressStepper = ({ status }) => {
 export default function Profile() {
   const { user } = useUser();
   const [issues, setIssues] = useState([]);
+  const [upvotedIssues, setUpvotedIssues] = useState([]);
+  const [activeTab, setActiveTab] = useState('reported');
   const [loading, setLoading] = useState(true);
   const [reviewModal, setReviewModal] = useState(null); 
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
 
   useEffect(() => {
-    const fetchMyIssues = async () => {
+    const fetchIssues = async () => {
       try {
-        const { data } = await api.get('/issues/my');
-        setIssues(data);
+        const [myRes, upvotedRes] = await Promise.all([
+          api.get('/issues/my'),
+          api.get('/issues/upvoted')
+        ]);
+        setIssues(myRes.data);
+        setUpvotedIssues(upvotedRes.data);
       } catch (error) {
-        console.error('Failed to fetch user issues', error);
+        console.error('Failed to fetch issues', error);
       } finally {
         setLoading(false);
       }
     };
-    if (user) fetchMyIssues();
+    if (user) fetchIssues();
   }, [user]);
+
+  const displayedIssues = activeTab === 'reported' ? issues : upvotedIssues;
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
@@ -115,17 +123,33 @@ export default function Profile() {
         </div>
       </div>
 
-      <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">Your Reporting History & Progress</h2>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-gray-100 pb-4">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900">Your Activity</h2>
+        <div className="flex gap-2 bg-gray-100/50 p-1.5 rounded-2xl">
+          <button 
+            onClick={() => setActiveTab('reported')}
+            className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeTab === 'reported' ? 'bg-primary text-white shadow-md' : 'text-gray-500 hover:text-gray-900'}`}
+          >
+            Reported
+          </button>
+          <button 
+            onClick={() => setActiveTab('upvoted')}
+            className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeTab === 'upvoted' ? 'bg-primary text-white shadow-md' : 'text-gray-500 hover:text-gray-900'}`}
+          >
+            Upvoted
+          </button>
+        </div>
+      </div>
       
-      {issues.length === 0 ? (
+      {displayedIssues.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
-          <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-gray-500">You haven't reported any issues yet.</h3>
-          <p className="text-gray-400 mt-2 text-sm">Help your community by reporting a civic problem today!</p>
+          {activeTab === 'reported' ? <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-4" /> : <Star className="w-12 h-12 text-gray-300 mx-auto mb-4" />}
+          <h3 className="text-xl font-bold text-gray-500">{activeTab === 'reported' ? "You haven't reported any issues yet." : "You haven't upvoted any issues yet."}</h3>
+          <p className="text-gray-400 mt-2 text-sm">{activeTab === 'reported' ? "Help your community by reporting a civic problem today!" : "Explore the feed and support your community by upvoting problems!"}</p>
         </div>
       ) : (
         <div className="grid gap-6">
-          {issues.map(issue => (
+          {displayedIssues.map(issue => (
             <motion.div key={issue._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl shadow-md border border-gray-100 flex flex-col overflow-hidden">
               <div className="p-5 md:p-6 pb-2 flex flex-col md:flex-row gap-6">
                 {issue.imageUrl && (
@@ -146,7 +170,16 @@ export default function Profile() {
                 
                 {/* Action Area based on Progress */}
                 <div className="md:w-48 flex flex-col justify-center border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
-                  {issue.status === 'Resolved' && !issue.resolutionReview ? (
+                  {activeTab === 'upvoted' && issue.authorId !== user.id ? (
+                    <div className="text-center opacity-70">
+                      <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-2 relative shadow-inner">
+                        <Star className="w-5 h-5 text-primary fill-primary" />
+                      </div>
+                      <p className="text-[10px] sm:text-xs font-bold text-primary mx-auto leading-tight">
+                        Upvoted
+                      </p>
+                    </div>
+                  ) : issue.status === 'Resolved' && !issue.resolutionReview ? (
                     <div className="text-center">
                       <p className="text-xs font-bold text-green-600 mb-2">Issue has been resolved!</p>
                       <button onClick={() => setReviewModal(issue._id)} className="w-full py-2 bg-secondary text-gray-900 rounded-lg font-bold text-sm shadow-sm hover:scale-105 transition-all outline-none">
