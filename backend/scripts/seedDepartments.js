@@ -16,7 +16,10 @@ async function seedDepartments() {
   console.log('Seeding Department Users into Clerk...');
 
   for (const dept of DEPARTMENTS) {
-    const email = `${dept.toLowerCase()}@civiq.com`;
+    let email = `${dept.toLowerCase()}@civiq.com`;
+    if (dept === 'Electricity') {
+      email = 'yash22csu295@ncuindia.edu';
+    }
     
     // Check if user exists (rough check by attempting to create. If it fails due to duplicate email, that's fine)
     try {

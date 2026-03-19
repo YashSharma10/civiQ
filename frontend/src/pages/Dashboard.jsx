@@ -110,7 +110,10 @@ export default function Dashboard() {
   });
 
   const effectiveFilter = (isAdmin && userDepartment && userDepartment !== 'All') ? userDepartment : filter;
-  const filteredIssues = effectiveFilter === 'All' ? processedIssues : processedIssues.filter(issue => issue.category === effectiveFilter);
+  const userIssues = isAdmin 
+    ? processedIssues 
+    : processedIssues.filter(issue => user && (issue.authorId === user.id || issue.upvotes?.includes(user.id)));
+  const filteredIssues = effectiveFilter === 'All' ? userIssues : userIssues.filter(issue => issue.category === effectiveFilter);
 
   const getStatusColor = (status) => {
     switch(status) {
@@ -135,8 +138,8 @@ export default function Dashboard() {
              </>
           ) : (
              <>
-               <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Civic Issues Explorer</h1>
-               <p className="mt-2 text-gray-600">Discover and track problems reported in your community.</p>
+               <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">My Dashboard</h1>
+               <p className="mt-2 text-gray-600">Track issues you have reported or supported.</p>
              </>
           )}
         </div>
@@ -171,10 +174,16 @@ export default function Dashboard() {
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
         </div>
+      ) : !user ? (
+        <div className="text-center py-20 bg-white rounded-2xl border border-gray-100 shadow-sm">
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Login Required</h3>
+          <p className="text-gray-500">Please log in to view issues you have reported or supported.</p>
+          <Link to="/login" className="mt-6 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-primary hover:bg-green-600 shadow-md hover:shadow-lg transition-all">Log In Now</Link>
+        </div>
       ) : filteredIssues.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-2xl border border-gray-100 shadow-sm">
           <h3 className="text-xl font-bold text-gray-900 mb-2">No issues found</h3>
-          <p className="text-gray-500">There are no {filter !== 'All' ? filter.toLowerCase() : ''} issues reported yet.</p>
+          <p className="text-gray-500">You haven't reported or supported any {filter !== 'All' ? filter.toLowerCase() : ''} issues yet.</p>
           <Link to="/report" className="mt-6 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-primary hover:bg-green-600 shadow-md hover:shadow-lg transition-all">Report an issue now</Link>
         </div>
       ) : viewMode === 'map' ? (
