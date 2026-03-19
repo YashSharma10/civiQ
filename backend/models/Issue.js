@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const mongoose = require('mongoose');
-
 const issueSchema = new mongoose.Schema({
   // Legacy fields
   title: {
