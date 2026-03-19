@@ -24,25 +24,35 @@ function clearSession(phone) {
 }
 
 exports.verifyWebhook = (req, res) => {
+  console.log('[Webhook][GET] Verification request:', req.query);
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
   const challenge = req.query['hub.challenge'];
   if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+    console.log('[Webhook][GET] Verification success');
     return res.status(200).send(challenge);
   }
+  console.log('[Webhook][GET] Verification failed');
   res.sendStatus(403);
 };
 
 exports.handleWebhook = async (req, res) => {
+  console.log('[Webhook][POST] Incoming body:', JSON.stringify(req.body));
   try {
     const entry = req.body?.entry?.[0];
     const changes = entry?.changes?.[0];
     const value = changes?.value;
     const messages = value?.messages;
-    if (!messages) return res.sendStatus(200);
+    if (!messages) {
+      console.log('[Webhook][POST] No messages found in payload.');
+      return res.sendStatus(200);
+    }
     const msg = messages[0];
     const phone = msg?.from;
-    if (!phone) return res.sendStatus(200);
+    if (!phone) {
+      console.log('[Webhook][POST] No phone number found in message.');
+      return res.sendStatus(200);
+    }
     const session = getSession(phone);
 
     // Logging
@@ -59,7 +69,7 @@ exports.handleWebhook = async (req, res) => {
       await sendWhatsAppMessage(phone, 'Sorry, only text, image, and location are supported.');
     }
   } catch (err) {
-    console.error('Webhook error:', err);
+    console.error('[Webhook][POST] Error:', err);
   }
   res.sendStatus(200);
 };
