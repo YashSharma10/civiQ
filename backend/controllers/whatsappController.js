@@ -175,6 +175,9 @@ async function handleTextMessage(msg, session) {
       waLocation: session.data.location
         ? { lat: session.data.location.lat, lng: session.data.location.lng }
         : undefined,
+      // Set lat/lng fields for frontend map display
+      lat: session.data.location ? session.data.location.lat : undefined,
+      lng: session.data.location ? session.data.location.lng : undefined,
     });
     await issue.save();
     log(`[${phone}] Issue saved: ${JSON.stringify(issue)}`);
