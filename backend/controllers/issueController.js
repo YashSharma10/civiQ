@@ -1,5 +1,8 @@
 const Issue = require('../models/Issue');
-const { getAuth } = require('@clerk/express')
+const { getAuth } = require('@clerk/express');
+const { createClerkClient } = require('@clerk/express');
+const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+const { sendStatusUpdateEmail } = require('../utils/emailService');
 
 // @desc    Get all issues
 // @route   GET /api/issues
@@ -67,7 +70,13 @@ const updateIssueStatus = async (req, res) => {
         const issue = await Issue.findById(req.params.id);
 
         if (issue) {
-            if (status) issue.status = status;
+            const oldStatus = issue.status;
+            let statusChanged = false;
+
+            if (status && status !== oldStatus) {
+                issue.status = status;
+                statusChanged = true;
+            }
 
             if (assignedToId) {
                 issue.assignedToId = assignedToId;
@@ -79,6 +88,20 @@ const updateIssueStatus = async (req, res) => {
 
             const updatedIssue = await issue.save();
             res.status(200).json(updatedIssue);
+
+            // Fetch clerk user and send email asynchronously
+            if (statusChanged) {
+                try {
+                    const reporter = await clerkClient.users.getUser(issue.authorId);
+                    const email = reporter.emailAddresses[0]?.emailAddress;
+                    if (email) {
+                        sendStatusUpdateEmail(email, issue.title, status);
+                    }
+                } catch (emailErr) {
+                    console.error('Failed to notify reporter of status change:', emailErr);
+                }
+            }
+
         } else {
             res.status(404).json({ message: 'Issue not found' });
         }
