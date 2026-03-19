@@ -92,7 +92,7 @@ const upvoteIssue = async (req, res) => {
         const issue = await Issue.findById(req.params.id);
 
         if (issue) {
-            const userId = req.auth.userId;
+            const { userId } = getAuth(req);
             const alreadyUpvoted = issue.upvotes.includes(userId);
             if (alreadyUpvoted) {
                 issue.upvotes = issue.upvotes.filter(id => id !== userId);
@@ -118,8 +118,9 @@ const addComment = async (req, res) => {
         const issue = await Issue.findById(req.params.id);
 
         if (issue) {
+            const { userId } = getAuth(req);
             const comment = {
-                userId: req.auth.userId,
+                userId,
                 userName: userName || 'User',
                 text
             };
@@ -139,7 +140,8 @@ const addComment = async (req, res) => {
 // @access  Private
 const getUserIssues = async (req, res) => {
     try {
-        const issues = await Issue.find({ authorId: req.auth.userId }).sort({ createdAt: -1 });
+        const { userId } = getAuth(req);
+        const issues = await Issue.find({ authorId: userId }).sort({ createdAt: -1 });
         res.status(200).json(issues);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -156,7 +158,8 @@ const reviewIssue = async (req, res) => {
 
         if (!issue) return res.status(404).json({ message: 'Issue not found' });
 
-        if (issue.authorId !== req.auth.userId) {
+        const { userId } = getAuth(req);
+        if (issue.authorId !== userId) {
             return res.status(401).json({ message: 'User not authorized to review this issue' });
         }
 
@@ -186,7 +189,8 @@ const reviewIssue = async (req, res) => {
 // @access  Private
 const getUpvotedIssues = async (req, res) => {
     try {
-        const issues = await Issue.find({ upvotes: req.auth.userId }).sort({ createdAt: -1 });
+        const { userId } = getAuth(req);
+        const issues = await Issue.find({ upvotes: userId }).sort({ createdAt: -1 });
         res.status(200).json(issues);
     } catch (error) {
         res.status(500).json({ message: error.message });
