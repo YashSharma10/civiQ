@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, MoreHorizontal, Play, Send, Repeat2, Search, X, Image, ThumbsUp, MessageCircle, ChevronDown } from 'lucide-react';
+import { Plus, MoreHorizontal, Play, Send, Repeat2, Search, X, Image, ThumbsUp, MessageCircle, ChevronDown, CheckCircle } from 'lucide-react';
 import { useUser } from '@clerk/clerk-react';
 import api from '../api/axios';
 import { Link } from 'react-router-dom';
@@ -464,6 +464,15 @@ export default function Feed() {
             ? <PostCard key={`p-${item._id || idx}`} post={item} onRefresh={fetchAll} />
             : <IssueCard key={`i-${item._id || idx}`} issue={item} />
         )}
+        
+        {/* End of Feed Card */}
+        <div className="w-full h-full snap-start relative flex-shrink-0 bg-gray-900 flex flex-col items-center justify-center p-6 text-center select-none md:rounded-b-2xl">
+          <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full shadow-[0_0_30px_rgba(255,255,255,0.1)] flex items-center justify-center mb-6 border border-white/20">
+            <CheckCircle className="w-10 h-10 text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
+          </div>
+          <h2 className="text-2xl font-extrabold text-white mb-2 tracking-tight">You're all caught up!</h2>
+          <p className="text-gray-400 font-medium text-sm max-w-xs">You've seen all the latest updates on the civic platform. Check back later for more.</p>
+        </div>
       </div>
     );
   };
@@ -491,7 +500,7 @@ export default function Feed() {
       </AnimatePresence>
 
       {/* ── MOBILE (< md) ── */}
-      <div className="md:hidden flex flex-col h-[calc(100dvh-64px)] pb-20">
+      <div className="md:hidden flex flex-col h-[calc(100dvh-64px)] pb-[80px] bg-black">
         <div className="sticky top-16 z-40 bg-white border-b border-gray-200 pt-5 px-4 pb-0 shadow-sm flex-shrink-0">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-[28px] font-extrabold text-gray-900">Feed</h1>
