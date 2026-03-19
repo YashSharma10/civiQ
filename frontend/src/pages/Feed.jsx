@@ -444,7 +444,7 @@ export default function Feed() {
       </div>
     );
     return (
-      <div className="flex-1 w-full mx-auto overflow-y-scroll snap-y snap-mandatory scrollbar-hide bg-black h-full relative border-x border-gray-900/50 md:rounded-b-2xl md:shadow-xl md:border-b">
+      <div className="flex-1 w-full mx-auto overflow-y-scroll snap-y snap-mandatory scrollbar-hide overscroll-none bg-black h-full relative border-x border-gray-900/50 md:rounded-b-2xl md:shadow-xl md:border-b">
         {items.map((item, idx) =>
           item._feedType === 'post'
             ? <PostCard key={`p-${item._id || idx}`} post={item} onRefresh={fetchAll} />
@@ -452,7 +452,7 @@ export default function Feed() {
         )}
         
         {/* End of Feed Card */}
-        <div className="w-full h-full snap-start relative flex-shrink-0 bg-gray-900 flex flex-col items-center justify-center p-6 text-center select-none md:rounded-b-2xl">
+        <div className="w-full min-h-full snap-start relative shrink-0 bg-gray-900 flex flex-col items-center justify-center p-6 text-center select-none md:rounded-b-2xl">
           <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full shadow-[0_0_30px_rgba(255,255,255,0.1)] flex items-center justify-center mb-6 border border-white/20">
             <CheckCircle className="w-10 h-10 text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
           </div>
@@ -464,7 +464,7 @@ export default function Feed() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f1f3f5]">
+    <div className="min-h-screen md:min-h-screen overflow-hidden md:overflow-auto bg-[#f1f3f5]">
       {/* Create Post Modal (Mobile) */}
       <AnimatePresence>
         {showCreateModal && (
@@ -488,7 +488,7 @@ export default function Feed() {
       {/* ── MOBILE (< md) ── */}
       <div className="md:hidden flex flex-col" style={{ height: 'calc(100dvh - 64px - 64px)' }}>
         {/* Compact tab bar header — no title text */}
-        <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 px-4 pt-2 pb-0 shadow-sm flex-shrink-0">
+        <div className="bg-white/95 backdrop-blur-md border-b border-gray-200 px-4 pt-2 pb-0 shadow-sm flex-shrink-0 z-10 touch-none select-none">
           <div className="flex justify-between items-center">
             <TabBar layoutId="feed-tab-m" />
             <button onClick={() => setShowCreateModal(true)} className="mb-2 w-8 h-8 rounded-full border-[1.5px] border-[#006aff] flex items-center justify-center text-[#006aff] hover:bg-blue-50 transition-colors flex-shrink-0">
