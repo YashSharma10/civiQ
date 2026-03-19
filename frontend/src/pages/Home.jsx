@@ -285,7 +285,7 @@ export default function Home() {
             className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight max-w-5xl"
           >
             Empowering Citizens to <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-accent to-primary">Improve Our City</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9933] via-white to-[#138808]">Improve Our City</span>
           </motion.h1>
 
           <motion.p
@@ -326,15 +326,15 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-14 sm:py-24 bg-gray-50">
+      <section className="py-14 sm:py-24 bg-gray-50 -mt-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-20 max-w-3xl mx-auto flex flex-col items-center">
-            <h2 className="bg-[#006aff] text-white px-4 py-1.5 rounded-md font-extrabold border-2 border-gray-900 shadow-[2px_2px_0px_#111827] tracking-wide uppercase text-xs mb-4 w-max">Simple Process</h2>
+            {/* <h2 className="bg-[#006aff] text-white px-4 py-1.5 rounded-md font-extrabold border-2 border-gray-900 shadow-[2px_2px_0px_#111827] tracking-wide uppercase text-xs mb-4 w-max">Simple Process</h2> */}
             <h3 className="font-['Playfair_Display'] text-3xl sm:text-5xl sm:text-6xl font-extrabold text-gray-900 mb-4">How CiviQ Works</h3>
             <p className="text-base sm:text-xl text-gray-600 font-medium leading-relaxed">Making a difference in your neighborhood has never been easier. Three simple steps to a better community.</p>
           </div>
 
-            <motion.div
+          <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
