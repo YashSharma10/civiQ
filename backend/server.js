@@ -27,13 +27,19 @@ app.use(clerkMiddleware());
 app.use("/uploads", express.static("uploads"));
 
 // Routes
-const webhookRoutes = require('./routes/webhookRoutes');
+const webhookRoutes = require("./routes/webhookRoutes");
 app.use("/api/issues", issueRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/validate-image", validateRoutes);
-app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf; } }));
-app.use('/api', webhookRoutes);
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
+  }),
+);
+app.use("/api", webhookRoutes);
 
 app.get("/", (req, res) => {
   res.send("Civic Issue Tracker API is running...");
@@ -60,6 +66,12 @@ app.get("/webhook", (req, res) => {
   }
 
   res.sendStatus(403);
+});
+app.post("/webhook", (req, res) => {
+  console.log("Webhook hit ✅");
+  console.log(JSON.stringify(req.body, null, 2));
+
+  res.sendStatus(200);
 });
 
 const PORT = process.env.PORT || 5000;
