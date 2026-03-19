@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton, useUser, useAuth } from '@clerk/clerk-react';
 import { Home, Map as MapIcon, PlusCircle, LogIn, UserPlus, LogOut, Menu, X, HelpCircle, Shield, LayoutDashboard, Plus, Bell, User } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 export default function Navbar() {
   const { isSignedIn, user } = useUser();
@@ -22,9 +23,8 @@ export default function Navbar() {
       <nav className={`w-full z-50 transition-all duration-300 ${isHome ? 'absolute top-0 left-0 bg-transparent py-4' : 'sticky top-0 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Link to="/" className="flex items-center gap-2 group">
-              <Shield className={`w-8 h-8 ${isHome ? 'text-white' : 'text-primary'} group-hover:text-secondary transition-colors`} />
-              <span className={`font-bold text-xl tracking-tight ${textColor}`}>Civi<span className={isHome ? 'text-white' : 'text-primary'}>Q</span></span>
+            <Link to="/" className="flex items-center group">
+              <img src={logo} alt="CiviQ" className="h-24 w-auto group-hover:opacity-80 transition-opacity" />
             </Link>
 
             {/* Desktop Navigation & Actions */}

@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
 import api from '../api/axios';
 import { MapPin, AlertTriangle, CheckCircle, ArrowRight, Shield, Zap, Droplet, Trash2, Users, Activity, Target, X, ThumbsUp } from 'lucide-react';
+import logo from '../assets/logo-footer.png';
 
 const SwipeableCard = ({ issue, isTop, onSwipeRight, onSwipeLeft, index, total }) => {
   const x = useMotionValue(0);
@@ -421,9 +422,10 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 sm:py-10 text-center border-t-4 sm:border-t-8 border-[#252525]">
-        <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
-          <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-[#006aff]" />
-          <span className="text-2xl sm:text-3xl font-bold tracking-tight">Civi<span className="text-[#006aff]">Q</span></span>
+        <div className="flex items-center justify-center mb-3 sm:mb-4">
+          <div className="inline-flex items-center justify-center rounded-2xl px-6 py-3">
+            <img src={logo} alt="CiviQ" className="h-10 sm:h-14 w-auto object-contain" />
+          </div>
         </div>
         <p className="text-gray-400 text-sm sm:text-base font-medium tracking-wide">© 2026 CiviQ Platform. Built for the community.</p>
       </footer>
