@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
 import api from '../api/axios';
-import { MapPin, Clock, MessageSquare, ThumbsUp, User, ArrowLeft, Send, Check, Activity } from 'lucide-react';
+import { MapPin, Clock, MessageSquare, ThumbsUp, User, ArrowLeft, Send, Check, Activity, Pencil } from 'lucide-react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -33,12 +33,15 @@ export default function IssueDetails() {
   const [error, setError] = useState('');
   const { user } = useUser();
 
-  const [users, setUsers] = useState([]);
+  const [assignedWorkerName, setAssignedWorkerName] = useState('');
+  const [isEditingWorker, setIsEditingWorker] = useState(true);
 
   const fetchIssue = async () => {
     try {
       const { data } = await api.get(`/issues/${id}`);
       setIssue(data);
+      setAssignedWorkerName(data.assignedToName || '');
+      setIsEditingWorker(!data.assignedToName);
     } catch (error) {
       setError('Failed to fetch issue details');
     } finally {
@@ -46,20 +49,8 @@ export default function IssueDetails() {
     }
   };
 
-  const fetchUsers = async () => {
-    try {
-      const { data } = await api.get('/auth/users');
-      setUsers(data);
-    } catch (error) {
-      console.error('Failed to fetch users', error);
-    }
-  };
-
   useEffect(() => {
     fetchIssue();
-    if (user && user.publicMetadata?.role === 'authority') {
-      fetchUsers();
-    }
   }, [id, user]);
 
   const handleUpvote = async () => {
@@ -94,13 +85,15 @@ export default function IssueDetails() {
     }
   };
 
-  const handleAssignChange = async (e) => {
+  const handleAssignSave = async () => {
+    if (!assignedWorkerName.trim()) return;
     try {
-      await api.put(`/issues/${id}/status`, { assignedTo: e.target.value || null, status: 'Assigned' });
+      await api.put(`/issues/${id}/status`, { assignedToName: assignedWorkerName.trim(), status: 'Assigned' });
+      setIsEditingWorker(false);
       fetchIssue();
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || 'Error assigning user');
+      alert(err.response?.data?.message || 'Error assigning worker');
     }
   };
 
@@ -347,18 +340,41 @@ export default function IssueDetails() {
               </h3>
               
               {isAdmin && (
-                <div className="space-y-3 mb-6">
+                <div className="space-y-2 mb-6">
                   <label className="block text-sm font-medium text-gray-700">Assign Worker / Official</label>
-                  <select 
-                    value={issue.assignedTo?._id || ''} 
-                    onChange={handleAssignChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none bg-white font-medium shadow-sm"
-                  >
-                    <option value="">-- Unassigned --</option>
-                    {users.map(u => (
-                      <option key={u._id} value={u._id}>{u.username} ({u.role})</option>
-                    ))}
-                  </select>
+
+                  {isEditingWorker ? (
+                    <div className="flex w-full">
+                      <input
+                        type="text"
+                        value={assignedWorkerName}
+                        onChange={(e) => setAssignedWorkerName(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleAssignSave()}
+                        placeholder="Enter worker name..."
+                        className="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-l-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none bg-white text-sm font-medium shadow-sm"
+                      />
+                      <button
+                        onClick={handleAssignSave}
+                        className="px-4 py-2.5 bg-primary text-white rounded-r-xl font-bold text-sm hover:bg-green-600 transition-colors shadow-sm whitespace-nowrap flex-shrink-0"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between px-3 py-2.5 bg-indigo-50 border border-indigo-100 rounded-xl">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <User className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+                        <span className="font-semibold text-indigo-800 text-sm truncate">{assignedWorkerName}</span>
+                      </div>
+                      <button
+                        onClick={() => setIsEditingWorker(true)}
+                        className="ml-2 p-1.5 rounded-lg hover:bg-indigo-100 text-indigo-500 hover:text-indigo-700 transition-colors flex-shrink-0"
+                        title="Edit assigned worker"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

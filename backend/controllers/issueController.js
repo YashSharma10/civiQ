@@ -71,6 +71,9 @@ const updateIssueStatus = async (req, res) => {
 
             if (assignedToId) {
                 issue.assignedToId = assignedToId;
+            }
+            // Save name independently — works with or without an ID
+            if (assignedToName !== undefined) {
                 issue.assignedToName = assignedToName;
             }
 

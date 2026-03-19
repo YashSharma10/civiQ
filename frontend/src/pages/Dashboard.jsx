@@ -261,9 +261,9 @@ export default function Dashboard() {
                   {issue.status}
                 </div>
                 {isAdmin && issue.status !== 'Resolved' && (
-                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-sm bg-red-100 text-red-800 border-red-200 flex items-center gap-1.5 z-10 transition-transform hover:scale-105 cursor-help" title={`Priority Score: ${issue.priorityScore}`}>
+                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-sm bg-red-100 text-red-800 border-red-200 flex items-center gap-1.5 z-10 transition-transform hover:scale-105 cursor-help" title={`Upvotes: ${issue.upvotes?.length || 0}`}>
                     <Flame className="w-3.5 h-3.5" />
-                    Urgent {issue.priorityScore > 0 ? `(${issue.priorityScore})` : ''}
+                    Urgent {issue.upvotes?.length > 0 ? `(${issue.upvotes.length})` : ''}
                   </div>
                 )}
                 {!isAdmin && user && issue.authorId === user.id && (
@@ -299,12 +299,14 @@ export default function Dashboard() {
                 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
                   <div className="flex gap-4">
-                    <button 
-                      onClick={(e) => handleSupport(e, issue._id)}
-                      className={`flex items-center gap-1.5 text-sm font-bold transition-colors hover:scale-105 active:scale-95 ${user && issue.upvotes.includes(user.id) ? 'text-secondary' : 'text-gray-500 hover:text-green-600'}`}
-                    >
-                      <ThumbsUp className={`w-4 h-4 ${user && issue.upvotes.includes(user.id) ? 'fill-secondary' : ''}`} /> {issue.upvotes?.length || 0}
-                    </button>
+                    {!isAdmin && (
+                      <button 
+                        onClick={(e) => handleSupport(e, issue._id)}
+                        className={`flex items-center gap-1.5 text-sm font-bold transition-colors hover:scale-105 active:scale-95 ${user && issue.upvotes.includes(user.id) ? 'text-secondary' : 'text-gray-500 hover:text-green-600'}`}
+                      >
+                        <ThumbsUp className={`w-4 h-4 ${user && issue.upvotes.includes(user.id) ? 'fill-secondary' : ''}`} /> {issue.upvotes?.length || 0}
+                      </button>
+                    )}
                     <div className="flex items-center gap-1.5 text-gray-500 text-sm font-medium">
                       <MessageSquare className="w-4 h-4" /> {issue.comments?.length || 0}
                     </div>
