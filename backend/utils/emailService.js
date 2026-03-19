@@ -53,11 +53,14 @@ const sendStatusUpdateEmail = async (recipientEmail, issueTitle, newStatus) => {
     `
   };
 
+  console.log(`[Nodemailer] Configuring transporter with user: ${process.env.GMAIL_USER}`);
+
   try {
-    await transporter.sendMail(mailOptions);
-    console.log(`Status update email sent to ${recipientEmail} for status ${newStatus}`);
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[Nodemailer] SUCCESS! Status update email sent to ${recipientEmail} for status ${newStatus}`);
+    console.log(`[Nodemailer] Message ID: ${info.messageId}`);
   } catch (error) {
-    console.error('Error sending status update email:', error);
+    console.error('[Nodemailer] FAILED to send status update email:', error);
   }
 };
 

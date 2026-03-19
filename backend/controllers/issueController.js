@@ -91,15 +91,26 @@ const updateIssueStatus = async (req, res) => {
 
             // Fetch clerk user and send email asynchronously
             if (statusChanged) {
+                console.log(`[Email Alert] Status changed to "${status}". Preparing to fetch user ${issue.authorId} from Clerk...`);
                 try {
                     const reporter = await clerkClient.users.getUser(issue.authorId);
-                    const email = reporter.emailAddresses[0]?.emailAddress;
+                    console.log(`[Email Alert] User fetched successfully:`, reporter.id);
+                    
+                    const email = reporter.emailAddresses && reporter.emailAddresses[0] ? reporter.emailAddresses[0].emailAddress : null;
+                    console.log(`[Email Alert] Extracted email: ${email}`);
+                    
                     if (email) {
-                        sendStatusUpdateEmail(email, issue.title, status);
+                        console.log(`[Email Alert] Dispatching email to ${email}...`);
+                        await sendStatusUpdateEmail(email, issue.title, status);
+                        console.log(`[Email Alert] Dispatch trigger completed.`);
+                    } else {
+                        console.log(`[Email Alert] No email address found for user ${issue.authorId}.`);
                     }
                 } catch (emailErr) {
-                    console.error('Failed to notify reporter of status change:', emailErr);
+                    console.error('[Email Alert] Failed to notify reporter of status change:', emailErr);
                 }
+            } else {
+                console.log(`[Email Alert] Status did not change. No email to trigger.`);
             }
 
         } else {
