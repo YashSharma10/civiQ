@@ -507,7 +507,7 @@ export default function Feed() {
       </div>
 
       {/* ── DESKTOP (≥ md) ── */}
-      <div className="hidden md:flex max-w-5xl mx-auto w-full gap-8 px-6 py-8 items-start justify-center">
+      <div className="hidden md:flex max-w-6xl mx-auto w-full gap-8 px-6 py-8 items-start justify-center">
 
         {/* Left sidebar */}
         <aside className="w-[220px] flex-shrink-0 sticky top-24 space-y-4">
@@ -532,9 +532,6 @@ export default function Feed() {
               View Map
             </Link>
           </div>
-          
-          {/* Create Post Area */}
-          <CreatePost onPosted={fetchAll} />
         </aside>
 
         {/* Center feed */}
@@ -552,6 +549,11 @@ export default function Feed() {
             <FeedList layoutId="feed-tab-d" />
           </div>
         </div>
+
+        {/* Right sidebar */}
+        <aside className="w-[300px] flex-shrink-0 sticky top-24 space-y-4">
+          <CreatePost onPosted={fetchAll} />
+        </aside>
 
       </div>
     </div>
