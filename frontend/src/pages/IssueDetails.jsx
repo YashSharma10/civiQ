@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
 import api from '../api/axios';
 import { ThumbsUp, User, Activity,MessageSquare,Send, MapPin, Clock, Info, Check, Image as ImageIcon, Map, HandHeart, ArrowLeft } from 'lucide-react';
@@ -39,11 +39,20 @@ export default function IssueDetails() {
   const [isDonating, setIsDonating] = useState(false);
   const [selectedDonation, setSelectedDonation] = useState(50);
   const [customDonation, setCustomDonation] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
+    const sessionId = query.get('session_id');
+
     if (query.get('donate') === 'success') {
-      toast.success('Thank you for your generous contribution! 💖', { duration: 5000 });
+      setShowSuccessModal(true);
+      
+      if (sessionId) {
+        api.post('/payments/verify-donation', { sessionId })
+           .catch(err => console.error('Failed to send receipt', err));
+      }
+
       window.history.replaceState(null, '', window.location.pathname);
     } else if (query.get('donate') === 'cancel') {
       toast.error('Donation was cancelled.', { duration: 4000 });
@@ -61,7 +70,8 @@ export default function IssueDetails() {
       const { data } = await api.post('/payments/create-checkout-session', {
         issueId: issue._id,
         issueTitle: issue.title,
-        donationAmount: amountInRs * 100 // send strictly in paise
+        donationAmount: amountInRs * 100, // send strictly in paise
+        customerEmail: user.primaryEmailAddress?.emailAddress
       });
       if (data.url) {
         window.location.href = data.url;
@@ -525,6 +535,39 @@ export default function IssueDetails() {
           </motion.div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {showSuccessModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="bg-white rounded-[2rem] p-8 max-w-sm w-full shadow-2xl relative overflow-hidden text-center border border-gray-100"
+            >
+              <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <HandHeart className="w-10 h-10 text-primary" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3 tracking-tight">Thank You!</h2>
+              <p className="text-gray-600 mb-8 text-sm leading-relaxed">
+                Your generous contribution has been received. Together, we are building better, more transparent communities.
+              </p>
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 rounded-xl transition-colors duration-200 shadow-md hover:shadow-lg"
+              >
+                Awesome
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
