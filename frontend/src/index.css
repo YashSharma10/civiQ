@@ -96,3 +96,12 @@
   box-shadow: none;
   transform: translate(4px, 4px);
 }
+
+/* ── Scrollbar hide utility ── */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE / Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome / Safari / Opera */
+}
