@@ -27,10 +27,13 @@ app.use(clerkMiddleware());
 app.use("/uploads", express.static("uploads"));
 
 // Routes
+const webhookRoutes = require('./routes/webhookRoutes');
 app.use("/api/issues", issueRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/validate-image", validateRoutes);
+app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf; } }));
+app.use('/api', webhookRoutes);
 
 app.get("/", (req, res) => {
   res.send("Civic Issue Tracker API is running...");
