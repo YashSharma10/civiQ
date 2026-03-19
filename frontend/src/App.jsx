@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import ReportIssue from './pages/ReportIssue';
 import IssueDetails from './pages/IssueDetails';
 import Profile from './pages/Profile';
+import Feed from './pages/Feed';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <main className="flex-grow w-full">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/feed" element={<Feed />} />
             <Route path="/login/*" element={<Login />} />
             <Route path="/register/*" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />

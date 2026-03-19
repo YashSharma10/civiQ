@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton, useUser, useAuth } from '@clerk/clerk-react';
-import { Home, Map as MapIcon, PlusCircle, LogIn, UserPlus, LogOut, Menu, X, HelpCircle, Shield, LayoutDashboard } from 'lucide-react';
+import { Home, Map as MapIcon, PlusCircle, LogIn, UserPlus, LogOut, Menu, X, HelpCircle, Shield, LayoutDashboard, Plus, Bell, User } from 'lucide-react';
 
 export default function Navbar() {
   const { isSignedIn, user } = useUser();
@@ -32,6 +32,7 @@ export default function Navbar() {
               {/* Links */}
               <div className="flex items-center space-x-8">
                 <Link to="/" className={`text-[15px] font-medium transition-colors ${isActive('/') ? textColor : `${textMuted} hover:text-gray-900`}`}>Home</Link>
+                <Link to="/feed" className={`text-[15px] font-medium transition-colors ${isActive('/feed') ? textColor : `${textMuted} hover:text-gray-900`}`}>Feed</Link>
                 <Link to="/dashboard" className={`text-[15px] font-medium transition-colors ${isActive('/dashboard') ? textColor : `${textMuted} hover:text-gray-900`}`}>Dashboard</Link>
                 <SignedIn>
                     <Link to="/report" className={`text-[15px] font-medium transition-colors ${isActive('/report') ? textColor : `${textMuted} hover:text-gray-900`}`}>Report Issue</Link>
@@ -75,9 +76,9 @@ export default function Navbar() {
             <Home className={`w-6 h-6 ${isActive('/') ? 'fill-primary/20' : ''}`} />
             <span className="text-[10px] font-medium">Home</span>
           </Link>
-          <Link to="/dashboard" className={`flex flex-col items-center justify-center w-full h-full gap-1 ${isActive('/dashboard') ? 'text-primary' : 'text-gray-500 active:text-gray-900'}`}>
-            <MapIcon className={`w-6 h-6 ${isActive('/dashboard') ? 'fill-primary/20' : ''}`} />
-            <span className="text-[10px] font-medium">Map</span>
+          <Link to="/feed" className={`flex flex-col items-center justify-center w-full h-full gap-1 ${isActive('/feed') ? 'text-primary' : 'text-gray-500 active:text-gray-900'}`}>
+            <Bell className={`w-6 h-6 ${isActive('/feed') ? 'fill-primary/20' : ''}`} />
+            <span className="text-[10px] font-medium">Feed</span>
           </Link>
           
           <div className="w-full flex justify-center -translate-y-6">
