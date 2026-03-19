@@ -8,4 +8,8 @@ export default defineConfig({
     tailwindcss(),
     react(),
   ],
+  server: {
+    host: true, // Listen on all local IPs
+    cors: true  // Enable explicit CORS for the Vite dev server
+  }
 })

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton, useUser, useAuth } from '@clerk/clerk-react';
-import { Home, Map as MapIcon, PlusCircle, LogIn, UserPlus, LogOut, Menu, X, HelpCircle, Shield } from 'lucide-react';
+import { Home, Map as MapIcon, PlusCircle, LogIn, UserPlus, LogOut, Menu, X, HelpCircle, Shield, LayoutDashboard } from 'lucide-react';
 
 export default function Navbar() {
   const { isSignedIn, user } = useUser();
@@ -77,9 +77,9 @@ export default function Navbar() {
             </Link>
           </div>
           
-          <Link to={isSignedIn ? "/profile" : "/login"} className={`flex flex-col items-center justify-center w-full h-full gap-1 ${isActive('/profile') ? 'text-primary' : 'text-gray-500 active:text-gray-900'}`}>
-             <UserPlus className={`w-6 h-6 ${isActive('/profile') ? 'fill-primary/20' : ''}`} />
-             <span className="text-[10px] font-medium">{isSignedIn ? "Profile" : "Login"}</span>
+          <Link to={isSignedIn ? "/dashboard" : "/login"} className={`flex flex-col items-center justify-center w-full h-full gap-1 ${isActive('/dashboard') ? 'text-primary' : 'text-gray-500 active:text-gray-900'}`}>
+             <LayoutDashboard className={`w-6 h-6 ${isActive('/dashboard') ? 'fill-primary/20' : ''}`} />
+             <span className="text-[10px] font-medium">{isSignedIn ? "Dashboard" : "Login"}</span>
           </Link>
           <button onClick={() => {}} className="w-full h-full flex flex-col gap-1 items-center justify-center text-gray-500 active:text-gray-900">
              <Menu className="w-6 h-6" />
