@@ -203,88 +203,94 @@ const PostCard = ({ post, onRefresh }) => {
     <>
       <AnimatePresence>{repostModal && <RepostModal post={post} onClose={() => setRepostModal(false)} onReposted={onRefresh} />}</AnimatePresence>
 
-      <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 mb-4 overflow-hidden">
-        {/* Repost indicator */}
-        {post.type === 'repost' && (
-          <div className="px-4 pt-3 pb-1 flex items-center gap-1.5 text-[12px] text-gray-400 font-semibold">
-            <Repeat2 className="w-4 h-4" /> {post.authorName} reposted
-          </div>
+      <div className="h-full w-full snap-start relative bg-[#0a0a0a] text-white shrink-0 group overflow-hidden border-b border-gray-900/50">
+        {/* Background Layer */}
+        {post.imageUrl ? (
+          <img src={post.imageUrl} className="absolute inset-0 w-full h-full object-cover" alt="post" />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-[#006aff]/80 via-purple-900/80 to-black"></div>
         )}
 
-        {/* If repost, show original context */}
-        {post.type === 'repost' && post.repostedFrom?.content && (
-          <div className="mx-4 mb-2 p-3 bg-gray-50 rounded-2xl border border-gray-200">
-            <p className="text-[11px] font-bold text-gray-400 mb-1">{post.repostedFrom.authorName}</p>
-            <p className="text-[14px] text-gray-700 line-clamp-3">{post.repostedFrom.content}</p>
-          </div>
-        )}
+        {/* Overlay Gradients for readability */}
+        <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none z-0"></div>
+        <div className="absolute inset-x-0 top-0 h-[20%] bg-gradient-to-b from-black/60 to-transparent pointer-events-none z-0"></div>
 
-        {/* Header */}
-        <div className="px-4 pt-3 pb-2 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        {/* Content Layer (Bottom Left) */}
+        <div className="absolute bottom-0 left-0 right-16 p-4 flex flex-col justify-end pointer-events-none z-10">
+          {/* Repost indicator */}
+          {post.type === 'repost' && (
+            <div className="flex items-center gap-1.5 text-[12px] text-white/80 font-bold mb-2">
+              <Repeat2 className="w-4 h-4" /> {post.authorName} reposted
+            </div>
+          )}
+
+          <div className="flex items-center gap-2 mb-2 pointer-events-auto">
             <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${post.authorId}&backgroundColor=006aff`}
-              className="w-10 h-10 rounded-full" alt="avatar" />
-            <div>
-              <p className="font-bold text-gray-900 text-[14px]">{post.authorName}</p>
-              <p className="text-[12px] text-gray-400">{new Date(post.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+              className="w-10 h-10 rounded-full border border-white/20" alt="avatar" />
+            <div className="flex flex-col">
+              <span className="font-bold text-[15px] drop-shadow-md">{post.authorName}</span>
+              <span className="text-[12px] text-white/70 drop-shadow-md">
+                {new Date(post.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </span>
             </div>
           </div>
-          <button className="text-gray-400 hover:bg-gray-100 p-2 rounded-full transition-colors">
-            <MoreHorizontal className="w-5 h-5" />
-          </button>
-        </div>
 
-        {/* Content */}
-        {post.content && (
-          <div className="px-4 pb-3">
-            <p className="text-[16px] text-gray-900 leading-relaxed">{post.content}</p>
-          </div>
-        )}
-
-        {/* Image */}
-        {post.imageUrl && (
-          <div className="px-4 mb-3">
-            <div className="rounded-2xl overflow-hidden border border-gray-100">
-              <img src={post.imageUrl} className="w-full object-cover max-h-72" alt="post" />
+          {post.type === 'repost' && post.repostedFrom?.content && (
+            <div className="mb-2 p-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 pointer-events-auto">
+              <p className="text-[11px] font-bold text-white/70 mb-1">{post.repostedFrom.authorName}</p>
+              <p className="text-[13px] text-white/90 line-clamp-2">{post.repostedFrom.content}</p>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Counts row */}
-        <div className="px-4 pb-2 flex items-center gap-4 text-[12px] text-gray-400 font-semibold">
-          {upvotes > 0 && <span>{upvotes} like{upvotes !== 1 ? 's' : ''}</span>}
-          {post.comments?.length > 0 && <span>{post.comments.length} comment{post.comments.length !== 1 ? 's' : ''}</span>}
-          {post.reposts?.length > 0 && <span>{post.reposts.length} repost{post.reposts.length !== 1 ? 's' : ''}</span>}
+          {post.content && (
+            <p className="text-[15px] font-medium leading-snug drop-shadow-md pointer-events-auto mb-2 pr-2">
+              {post.content}
+            </p>
+          )}
         </div>
 
-        {/* Action Bar */}
-        <div className="px-4 pb-3 flex items-center gap-2 border-t border-gray-100 pt-2">
-          <button onClick={handleUpvote}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold text-[14px] transition-all
-              ${hasUpvoted ? 'bg-blue-50 text-[#006aff]' : 'text-gray-600 hover:bg-gray-50'}`}>
-            <ThumbsUp className={`w-4 h-4 ${hasUpvoted ? 'fill-[#006aff]' : ''}`} />
-            Like
+        {/* Actions Sidebar (Right) */}
+        <div className="absolute bottom-6 right-2 flex flex-col items-center gap-4 z-10 w-14 pointer-events-auto">
+          <button onClick={handleUpvote} className="flex flex-col items-center gap-1 group/btn">
+            <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+              <ThumbsUp className={`w-5 h-5 ${hasUpvoted ? 'fill-[#006aff] text-[#006aff]' : 'text-white'}`} />
+            </div>
+            <span className="text-[12px] font-bold text-white drop-shadow-md">{upvotes}</span>
           </button>
 
-          <button onClick={() => setShowComments(v => !v)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold text-[14px] text-gray-600 hover:bg-gray-50 transition-colors">
-            <MessageCircle className="w-4 h-4" />
-            Comment
+          <button onClick={() => setShowComments(v => !v)} className="flex flex-col items-center gap-1 group/btn">
+            <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+              <MessageCircle className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-[12px] font-bold text-white drop-shadow-md">{post.comments?.length || 0}</span>
           </button>
 
-          <button onClick={() => { if (!user) return alert('Please log in!'); setRepostModal(true); }}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold text-[14px] transition-all
-              ${hasReposted ? 'text-green-600 bg-green-50' : 'text-gray-600 hover:bg-gray-50'}`}>
-            <Repeat2 className="w-4 h-4" />
-            {hasReposted ? 'Reposted' : 'Repost'}
+          <button onClick={() => { if (!user) return alert('Please log in!'); setRepostModal(true); }} className="flex flex-col items-center gap-1 group/btn">
+            <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+               <Repeat2 className={`w-5 h-5 ${hasReposted ? 'text-[#10b981]' : 'text-white'}`} />
+            </div>
+            <span className="text-[12px] font-bold text-white drop-shadow-md">{post.reposts?.length || 0}</span>
+          </button>
+
+          <button className="flex flex-col items-center gap-1 group/btn mt-2">
+            <MoreHorizontal className="w-6 h-6 text-white drop-shadow-md" />
           </button>
         </div>
 
-        {/* Comments */}
+        {/* Comments Overlay */}
         <AnimatePresence>
           {showComments && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
-              <CommentsSection post={post} onCommented={onRefresh} />
+            <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="absolute inset-x-0 bottom-0 max-h-[60%] bg-white text-black rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-20 overflow-y-auto flex flex-col">
+              <div className="sticky top-0 bg-white/90 backdrop-blur-md z-10 px-4 py-3 flex items-center justify-between border-b border-gray-100">
+                <h3 className="font-bold text-[15px]">Comments</h3>
+                <button onClick={() => setShowComments(false)} className="p-1.5 bg-gray-100 rounded-full hover:bg-gray-200">
+                  <X className="w-4 h-4 text-gray-600" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                <CommentsSection post={post} onCommented={onRefresh} />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -319,51 +325,70 @@ const IssueCard = ({ issue }) => {
   };
 
   return (
-    <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 mb-4 overflow-hidden pb-1">
-      {/* Badge */}
-      <div className="px-4 pt-3 pb-1 flex items-center gap-1.5">
-        <span className="text-[11px] font-bold text-white bg-[#006aff] px-2.5 py-0.5 rounded-full">🚨 Issue Report</span>
-        <span className="text-[11px] font-semibold text-gray-400">{issue.status}</span>
+    <div className="h-full w-full snap-start relative bg-[#0a0a0a] text-white shrink-0 group overflow-hidden border-b border-gray-900/50">
+      {/* Background Layer */}
+      {issue.imageUrl ? (
+        <img src={getImageUrl(issue.imageUrl)} className="absolute inset-0 w-full h-full object-cover" alt="issue" />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-red-900 via-orange-900/80 to-black"></div>
+      )}
+
+      {/* Overlay Gradients for readability */}
+      <div className="absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-black/95 via-black/50 to-transparent pointer-events-none z-0"></div>
+      <div className="absolute inset-x-0 top-0 h-[20%] bg-gradient-to-b from-black/70 to-transparent pointer-events-none z-0"></div>
+
+      {/* Top Badge */}
+      <div className="absolute top-4 left-4 flex gap-2 z-10 pointer-events-auto">
+        <span className="text-[11px] font-extrabold text-white bg-red-600/90 backdrop-blur-md px-3 py-1 rounded-full shadow-lg border border-red-500/30 tracking-wide uppercase">
+          🚨 Issue
+        </span>
+        <span className="text-[11px] font-extrabold text-white bg-black/40 backdrop-blur-md px-3 py-1 rounded-full shadow-lg border border-white/10 tracking-wide uppercase">
+          {issue.status}
+        </span>
       </div>
 
-      {/* Header */}
-      <div className="px-4 pt-2 pb-2 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      {/* Content Layer (Bottom Left) */}
+      <div className="absolute bottom-0 left-0 right-16 p-4 flex flex-col justify-end pointer-events-none z-10">
+        <div className="flex items-center gap-2 mb-3 pointer-events-auto">
           <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${issue.authorId}&backgroundColor=006aff`}
-            className="w-10 h-10 rounded-full" alt="avatar" />
-          <div>
-            <p className="font-bold text-gray-900 text-[14px]">{issue.department || issue.authorName || 'Concerned Citizen'}</p>
-            <p className="text-[12px] text-gray-400">{new Date(issue.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</p>
+            className="w-10 h-10 rounded-full border border-white/20 shadow-md" alt="avatar" />
+          <div className="flex flex-col">
+            <span className="font-bold text-[15px] drop-shadow-md">{issue.department || issue.authorName || 'Concerned Citizen'}</span>
+            <span className="text-[12px] text-white/70 drop-shadow-md">
+              {new Date(issue.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+            </span>
           </div>
         </div>
-        <button className="text-gray-400 hover:bg-gray-100 p-2 rounded-full"><MoreHorizontal className="w-5 h-5" /></button>
+
+        <p className="text-[18px] font-bold leading-snug drop-shadow-md pointer-events-auto mb-1 pr-2">
+          {issue.title}
+        </p>
+        <p className="text-[14px] text-white/80 font-medium leading-snug drop-shadow-md pointer-events-auto mb-2 line-clamp-3 pr-2">
+          {issue.description}
+        </p>
       </div>
 
-      <div className="px-4 pb-3">
-        <p className="text-[17px] font-bold text-gray-900 leading-snug">{issue.title}</p>
-        <p className="text-[13px] text-gray-500 mt-1 line-clamp-2">{issue.description}</p>
-      </div>
-
-      {/* Image */}
-      <div className="px-4 mb-3">
-        <div className="rounded-2xl overflow-hidden">
-          <img src={getImageUrl(issue.imageUrl)} className="w-full aspect-video object-cover" alt="issue" />
-        </div>
-      </div>
-
-      {/* Action Bar */}
-      <div className="px-4 py-2 mb-1 flex items-center gap-3">
-        <button onClick={handleUpvote}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl font-bold text-[16px] transition-all
-            ${hasUpvoted ? 'bg-[#10b981] text-white' : 'bg-[#10b981] text-white shadow-[0_4px_10px_rgba(16,185,129,0.3)] hover:scale-[1.02]'}`}>
-          <Plus className="w-5 h-5 stroke-[3]" /> {upvotes}
+      {/* Actions Sidebar (Right) */}
+      <div className="absolute bottom-6 right-2 flex flex-col items-center gap-4 z-10 w-14 pointer-events-auto">
+        <button onClick={handleUpvote} className="flex flex-col items-center gap-1 group/btn">
+          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${hasUpvoted ? 'bg-[#10b981] shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-black/40 backdrop-blur-md border border-white/10 group-hover/btn:bg-white/20'}`}>
+            <Plus className={`w-6 h-6 stroke-[3] ${hasUpvoted ? 'text-white' : 'text-white'}`} />
+          </div>
+          <span className="text-[12px] font-bold text-white drop-shadow-md">{upvotes}</span>
         </button>
-        <Link to={`/issue/${issue._id}`}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-gray-700 text-[14px] border-2 border-gray-100 hover:bg-gray-50 bg-white">
-          <MessageCircle className="w-4 h-4" /> View
+
+        <Link to={`/issue/${issue._id}`} className="flex flex-col items-center gap-1 group/btn">
+          <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+            <MessageCircle className="w-5 h-5 text-white" />
+          </div>
+          <span className="text-[11px] font-bold text-white drop-shadow-md">View</span>
         </Link>
-        <button className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-gray-700 text-[14px] border-2 border-gray-100 hover:bg-gray-50 bg-white">
-          <Send className="w-4 h-4 -rotate-45" /> Send
+        
+        <button className="flex flex-col items-center gap-1 group/btn">
+          <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover/btn:bg-white/20 transition-all">
+            <Send className="w-5 h-5 text-white -rotate-45 ml-1" />
+          </div>
+          <span className="text-[11px] font-bold text-white drop-shadow-md">Share</span>
         </button>
       </div>
     </div>
@@ -375,6 +400,7 @@ export default function Feed() {
   const [posts, setPosts] = useState([]);
   const [issues, setIssues] = useState([]);
   const [activeTab, setActiveTab] = useState('Trending');
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(true);
   const categories = ['Roads & Transit', 'Water & Sanitation', 'Electricity', 'Waste Management', 'Public Safety', 'Other'];
 
@@ -424,7 +450,7 @@ export default function Feed() {
   const FeedList = ({ layoutId }) => {
     const items = filteredFeed();
     if (loadingPosts) return (
-      <div className="py-20 text-center">
+      <div className="py-20 text-center flex-1 flex flex-col items-center justify-center">
         <div className="w-12 h-12 bg-white shadow-sm border rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
           <Search className="w-5 h-5 text-gray-300" />
         </div>
@@ -432,38 +458,56 @@ export default function Feed() {
       </div>
     );
     return (
-      <>
-        <CreatePost onPosted={fetchAll} />
+      <div className="flex-1 w-full mx-auto overflow-y-scroll snap-y snap-mandatory scrollbar-hide bg-black h-full relative border-x border-gray-900/50 md:rounded-b-2xl md:shadow-xl md:border-b">
         {items.map((item, idx) =>
           item._feedType === 'post'
             ? <PostCard key={`p-${item._id || idx}`} post={item} onRefresh={fetchAll} />
             : <IssueCard key={`i-${item._id || idx}`} issue={item} />
         )}
-      </>
+      </div>
     );
   };
 
   return (
     <div className="min-h-screen bg-[#f1f3f5]">
+      {/* Create Post Modal (Mobile) */}
+      <AnimatePresence>
+        {showCreateModal && (
+          <div className="md:hidden fixed inset-0 z-[200] flex items-end justify-center bg-black/50 backdrop-blur-sm p-0">
+            <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="bg-white w-full rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)] overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                <h3 className="font-bold text-gray-900 text-[17px]">Create Post</h3>
+                <button onClick={() => setShowCreateModal(false)} className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
+                  <X className="w-4 h-4 text-gray-600" />
+                </button>
+              </div>
+              <div className="p-4 pb-8">
+                <CreatePost onPosted={() => { fetchAll(); setShowCreateModal(false); }} />
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* ── MOBILE (< md) ── */}
-      <div className="md:hidden max-w-[480px] mx-auto flex flex-col pb-20">
-        <div className="sticky top-16 z-40 bg-white border-b border-gray-100 pt-5 px-4 pb-0 shadow-sm">
+      <div className="md:hidden flex flex-col h-[calc(100dvh-64px)] pb-20">
+        <div className="sticky top-16 z-40 bg-white border-b border-gray-200 pt-5 px-4 pb-0 shadow-sm flex-shrink-0">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-[28px] font-extrabold text-gray-900">Issues</h1>
-            <Link to="/report" className="w-9 h-9 rounded-full border-[1.5px] border-[#006aff] flex items-center justify-center text-[#006aff] hover:bg-blue-50 transition-colors">
+            <h1 className="text-[28px] font-extrabold text-gray-900">Feed</h1>
+            <button onClick={() => setShowCreateModal(true)} className="w-9 h-9 rounded-full border-[1.5px] border-[#006aff] flex items-center justify-center text-[#006aff] hover:bg-blue-50 transition-colors">
               <Plus className="w-5 h-5 stroke-[2.5]" />
-            </Link>
+            </button>
           </div>
           <TabBar layoutId="feed-tab-m" />
         </div>
-        <div className="p-4 pt-5">
+        <div className="flex-1 overflow-hidden flex flex-col">
           <FeedList layoutId="feed-tab-m" />
         </div>
       </div>
 
       {/* ── DESKTOP (≥ md) ── */}
-      <div className="hidden md:flex max-w-6xl mx-auto w-full gap-6 px-6 py-8 items-start">
+      <div className="hidden md:flex max-w-5xl mx-auto w-full gap-8 px-6 py-8 items-start justify-center">
 
         {/* Left sidebar */}
         <aside className="w-[220px] flex-shrink-0 sticky top-24 space-y-4">
@@ -488,58 +532,26 @@ export default function Feed() {
               View Map
             </Link>
           </div>
+          
+          {/* Create Post Area */}
+          <CreatePost onPosted={fetchAll} />
         </aside>
 
         {/* Center feed */}
-        <div className="flex-1 min-w-0 space-y-4">
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-6 pt-5 pb-0">
+        <div className="flex-1 min-w-0 flex flex-col h-[calc(100vh-120px)] max-w-[500px]">
+          <div className="bg-white rounded-t-2xl border border-gray-200 shadow-sm px-6 pt-5 pb-0 flex-shrink-0 z-10">
             <div className="flex justify-between items-center mb-4">
-              <h1 className="text-[24px] font-extrabold text-gray-900">Community Feed</h1>
+              <h1 className="text-[24px] font-extrabold text-gray-900">Feed</h1>
               <Link to="/report" className="flex items-center gap-1.5 px-4 py-2 bg-[#006aff] text-white rounded-xl font-bold text-[13px] hover:bg-blue-600 transition-colors">
                 <Plus className="w-4 h-4 stroke-[3]" /> Report Issue
               </Link>
             </div>
             <TabBar layoutId="feed-tab-d" />
           </div>
-          <div>
+          <div className="flex-1 min-h-0 flex flex-col relative overflow-hidden bg-black/5 rounded-b-2xl">
             <FeedList layoutId="feed-tab-d" />
           </div>
         </div>
-
-        {/* Right sidebar */}
-        <aside className="w-[250px] flex-shrink-0 sticky top-24 space-y-4">
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-100">
-              <h3 className="font-bold text-gray-900 text-[15px]">🔥 Trending Issues</h3>
-            </div>
-            <div className="p-3 space-y-1">
-              {issues.slice(0, 5).map((issue, i) => (
-                <Link to={`/issue/${issue._id}`} key={i} className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer block">
-                  <span className="text-[12px] font-extrabold text-[#006aff] min-w-[16px] mt-0.5">#{i + 1}</span>
-                  <div>
-                    <p className="text-[13px] font-semibold text-gray-800 line-clamp-2 leading-snug">{issue.title}</p>
-                    <p className="text-[11px] text-gray-400 mt-0.5">+{issue.upvotes?.length || 0} supports</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
-            <h3 className="font-bold text-gray-900 text-[15px] mb-4">Platform Stats</h3>
-            <div className="space-y-3">
-              {[
-                { label: 'Issues Reported', value: `${issues.length}+` },
-                { label: 'Community Posts', value: `${posts.length}` },
-                { label: 'Avg. Response', value: '48h' },
-              ].map(s => (
-                <div key={s.label} className="flex items-center justify-between">
-                  <span className="text-[13px] text-gray-500">{s.label}</span>
-                  <span className="text-[14px] font-extrabold text-gray-900">{s.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </aside>
 
       </div>
     </div>
